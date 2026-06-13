@@ -100,6 +100,7 @@ class CustomerController extends Controller
             'address' => ['nullable', 'string', 'max:500'],
             'notes' => ['nullable', 'string', 'max:500'],
             'paymentMethod' => ['nullable', Rule::in(['cash', 'online_transfer'])],
+            'receipt' => ['nullable', 'file', 'mimes:jpeg,png,pdf', 'max:5120'],
             'cartData' => ['required', 'json'],
         ]);
 
@@ -115,7 +116,12 @@ class CustomerController extends Controller
         $deliveryFee = $validated['orderType'] === 'delivery' ? 3.00 : 0.00;
         $total = $subtotal + $tax + $deliveryFee;
 
-        $order = DB::transaction(function () use ($validated, $cartItems, $subtotal, $tax, $deliveryFee, $total) {
+        $receiptPath = null;
+        if ($request->hasFile('receipt')) {
+            $receiptPath = $request->file('receipt')->store('receipts', 'public');
+        }
+
+        $order = DB::transaction(function () use ($validated, $cartItems, $subtotal, $tax, $deliveryFee, $total, $receiptPath) {
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'customer_name' => $validated['custName'],
@@ -125,6 +131,7 @@ class CustomerController extends Controller
                 'delivery_address' => $validated['address'] ?? null,
                 'special_notes' => $validated['notes'] ?? null,
                 'payment_method' => $validated['paymentMethod'] ?? 'cash',
+                'receipt_path' => $receiptPath,
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'delivery_fee' => $deliveryFee,

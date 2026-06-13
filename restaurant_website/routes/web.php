@@ -28,9 +28,18 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/staff/dashboard', [StaffController::class, 'dashboard'])->name('staff.dashboard');
     Route::get('/staff/manage-orders', [StaffController::class, 'orders'])->name('staff.orders');
+    Route::patch('/staff/orders/{order}/status', [StaffController::class, 'updateOrderStatus'])->name('staff.orders.status');
     Route::get('/staff/manage-menu', [StaffController::class, 'menu'])->name('staff.menu');
+    Route::post('/staff/menu', [StaffController::class, 'storeMenuItem'])->name('staff.menu.store');
+    Route::put('/staff/menu/{menuItem}', [StaffController::class, 'updateMenuItem'])->name('staff.menu.update');
+    Route::patch('/staff/menu/{menuItem}/toggle', [StaffController::class, 'toggleMenuAvailability'])->name('staff.menu.toggle');
+    Route::delete('/staff/menu/{menuItem}', [StaffController::class, 'destroyMenuItem'])->name('staff.menu.destroy');
     Route::get('/staff/manage-tables', [StaffController::class, 'tables'])->name('staff.tables');
+    Route::post('/staff/tables', [StaffController::class, 'storeTable'])->name('staff.tables.store');
+    Route::delete('/staff/tables/{table}', [StaffController::class, 'destroyTable'])->name('staff.tables.destroy');
     Route::get('/staff/manage-users', [StaffController::class, 'users'])->name('staff.users');
+    Route::patch('/staff/users/{user}/toggle-status', [StaffController::class, 'toggleUserStatus'])->name('staff.users.toggle');
+    Route::get('/staff/reports', [StaffController::class, 'reports'])->name('staff.reports');
 
     Route::get('/api/orders/status', [CustomerController::class, 'orderStatusJson'])->name('api.orders.status');
 });

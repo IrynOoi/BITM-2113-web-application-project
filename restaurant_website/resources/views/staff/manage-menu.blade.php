@@ -8,10 +8,13 @@
 </div>
 
 <div class="filter-bar">
-    <input type="text" id="menuSearch" placeholder="Search menu..." class="filter-input" style="width: 300px;">
-    <button id="searchClear" style="display: none; background: none; border: none; cursor: pointer; color: #999;">
-        <i class="fas fa-times"></i>
-    </button>
+    <form method="GET" action="{{ route('staff.menu') }}" style="display:flex; gap:10px;">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search menu..." class="filter-input" style="width: 300px;">
+        <button type="submit" class="btn-view">Search</button>
+        @if(request('search'))
+            <a href="{{ route('staff.menu') }}" class="btn-cancel" style="padding:8px 12px; text-decoration:none;">Clear</a>
+        @endif
+    </form>
 </div>
 
 <div class="table-responsive">
@@ -26,60 +29,49 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="menuTableBody"></tbody>
+        <tbody id="menuTableBody">
+            @forelse($menuItems as $item)
+                <tr>
+                    <td>
+                        @if($item->image_path)
+                            <img src="{{ Storage::url($item->image_path) }}" class="menu-thumb" alt="{{ $item->name }}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                        @else
+                            <img src="{{ asset('assets/images/menu-image/item'.$item->id.'.png') }}" class="menu-thumb" alt="{{ $item->name }}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.style.display='none'">
+                        @endif
+                    </td>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ ucfirst($item->category) }}</td>
+                    <td>RM {{ number_format($item->price, 2) }}</td>
+                    <td>
+                        <span class="status-badge {{ $item->is_available ? 'available' : 'unavailable' }}">
+                            {{ $item->is_available ? 'Available' : 'Out of Stock' }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex; gap:5px;">
+                            <form method="POST" action="{{ route('staff.menu.toggle', $item->id) }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn-toggle {{ $item->is_available ? 'available' : 'unavailable' }}" title="Toggle Availability" style="border:none; cursor:pointer; background:none; font-size:1.5em; color: {{ $item->is_available ? '#28a745' : '#dc3545' }};">
+                                    <i class="fas {{ $item->is_available ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                                </button>
+                            </form>
+                            <form method="POST" action="{{ route('staff.menu.destroy', $item->id) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-delete" style="background:#ff4d4f; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer;" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr><td colspan="6" class="text-center py-4">No menu items found.</td></tr>
+            @endforelse
+        </tbody>
     </table>
 </div>
 @endsection
 
-@section('scripts')
-<script src="{{ asset('assets/js/menu.js') }}"></script>
-<script>
-    const tbody = document.getElementById('menuTableBody');
-    tbody.innerHTML = menuData.map((item) => {
-        const image = `${window.restaurantAssetBase}/images/menu-image/item${item.id}.png`;
-        return `
-            <tr>
-                <td><img src="${image}" class="menu-thumb" alt="${item.name}" onerror="this.style.display='none'"></td>
-                <td>${item.name}</td>
-                <td>${item.category.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</td>
-                <td>RM ${item.price.toFixed(2)}</td>
-                <td><span class="status-badge available" id="status-${item.id}">Available</span></td>
-                <td>
-                    <button class="btn-toggle available" id="btn-${item.id}" onclick="toggleStatus(${item.id})">
-                        <i class="fas fa-toggle-on"></i>
-                    </button>
-                </td>
-            </tr>
-        `;
-    }).join('');
 
-    function toggleStatus(id) {
-        const badge = document.getElementById('status-' + id);
-        const btn = document.getElementById('btn-' + id);
-        const isAvailable = badge.classList.contains('available');
-        badge.classList.toggle('available', !isAvailable);
-        badge.classList.toggle('unavailable', isAvailable);
-        badge.textContent = isAvailable ? 'Out of Stock' : 'Available';
-        btn.classList.toggle('available', !isAvailable);
-        btn.classList.toggle('unavailable', isAvailable);
-        btn.innerHTML = isAvailable ? '<i class="fas fa-toggle-off"></i>' : '<i class="fas fa-toggle-on"></i>';
-    }
-
-    const searchInput = document.getElementById('menuSearch');
-    const searchClear = document.getElementById('searchClear');
-    searchInput.addEventListener('input', function() {
-        const query = this.value.trim().toLowerCase();
-        searchClear.style.display = query ? 'block' : 'none';
-        tbody.querySelectorAll('tr').forEach(row => {
-            const name = row.cells[1].textContent.toLowerCase();
-            const category = row.cells[2].textContent.toLowerCase();
-            row.style.display = (name.includes(query) || category.includes(query)) ? '' : 'none';
-        });
-    });
-    searchClear.addEventListener('click', function() {
-        searchInput.value = '';
-        this.style.display = 'none';
-        tbody.querySelectorAll('tr').forEach(row => row.style.display = '');
-    });
-</script>
-@endsection

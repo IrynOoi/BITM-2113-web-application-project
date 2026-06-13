@@ -5,23 +5,46 @@
 @section('content')
 <div class="staff-header">
     <h1>Manage Tables</h1>
-    <button class="btn-add" id="btnAddTable"><i class="fas fa-plus"></i> Add Table</button>
+    <form method="POST" action="{{ route('staff.tables.store') }}" style="display:flex; gap:10px; align-items:center;">
+        @csrf
+        <input type="number" name="table_number" placeholder="Table Number" required class="filter-input" style="width: 150px;">
+        <input type="number" name="capacity" placeholder="Capacity (Pax)" required class="filter-input" style="width: 150px;" value="4">
+        <button type="submit" class="btn-add"><i class="fas fa-plus"></i> Add Table</button>
+    </form>
 </div>
 
 <div class="tables-grid">
-    @for($i = 1; $i <= 30; $i++)
-        <div class="table-card {{ $i <= 8 ? 'occupied' : 'available' }}">
+    @forelse($tables as $table)
+        @php
+            $qrUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' . urlencode(route('customer.qr-order', ['table' => $table->table_number])) . '&choe=UTF-8';
+            $activeOrder = \App\Models\Order::where('table_number', $table->table_number)
+                                            ->whereIn('status', ['pending', 'confirmed', 'preparing', 'ready'])
+                                            ->first();
+            $isOccupied = $activeOrder ? true : false;
+        @endphp
+        <div class="table-card {{ $isOccupied ? 'occupied' : 'available' }}">
             <div class="table-qr">
-                <img src="{{ asset('assets/images/Table-QRs/qr'.$i.'.jpeg') }}" alt="QR Code" onerror="this.style.display='none'">
+                <img src="{{ $qrUrl }}" alt="QR Code">
             </div>
-            <span class="table-num">Table {{ $i }}</span>
-            <span class="table-status">{{ $i <= 8 ? 'Occupied' : 'Available' }}</span>
-            @if($i <= 8)
-                <small>3 pax - RM 45.00</small>
+            <span class="table-num">Table {{ $table->table_number }}</span>
+            <span class="table-status">{{ $isOccupied ? 'Occupied' : 'Available' }}</span>
+            @if($isOccupied)
+                <small>{{ $table->capacity }} pax - RM {{ number_format($activeOrder->total, 2) }}</small>
             @endif
-            <button class="btn-table-action" onclick="viewTable({{ $i }})">View</button>
+            <div style="display:flex; gap:5px; margin-top:10px;">
+                <button class="btn-table-action" onclick="viewTable({{ $table->table_number }}, '{{ $qrUrl }}', {{ $isOccupied ? 'true' : 'false' }}, '{{ $activeOrder ? '#'.$activeOrder->id : '-' }}', '{{ $table->capacity }} pax', '{{ $activeOrder ? 'RM '.number_format($activeOrder->total, 2) : '-' }}')" style="flex:1;">View</button>
+                <form method="POST" action="{{ route('staff.tables.destroy', $table->id) }}" onsubmit="return confirm('Are you sure you want to delete Table {{ $table->table_number }}?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn-delete" style="background:#ff4d4f; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer;" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-    @endfor
+    @empty
+        <p>No tables configured.</p>
+    @endforelse
 </div>
 
 <div class="modal-overlay" id="tableModal" style="display: none;">
@@ -49,21 +72,21 @@
 
 @section('scripts')
 <script>
-    function viewTable(tableNum) {
+    function viewTable(tableNum, qrUrl, isOccupied, orderId, pax, total) {
         const modal = document.getElementById('tableModal');
         document.getElementById('modalTableTitle').textContent = 'Table ' + tableNum;
         const qrImg = document.getElementById('modalQrImage');
-        qrImg.src = `${window.restaurantAssetBase}/images/Table-QRs/qr${tableNum}.jpeg`;
+        qrImg.src = qrUrl;
         qrImg.style.display = 'block';
-        if (tableNum <= 8) {
+        if (isOccupied) {
             document.getElementById('modalStatus').innerHTML = '<span class="status-badge preparing">Occupied</span>';
-            document.getElementById('modalOrder').textContent = '#102' + tableNum;
-            document.getElementById('modalPax').textContent = '3 pax';
-            document.getElementById('modalTotal').textContent = 'RM 45.00';
+            document.getElementById('modalOrder').textContent = orderId;
+            document.getElementById('modalPax').textContent = pax;
+            document.getElementById('modalTotal').textContent = total;
         } else {
             document.getElementById('modalStatus').innerHTML = '<span class="status-badge available">Available</span>';
             document.getElementById('modalOrder').textContent = '-';
-            document.getElementById('modalPax').textContent = '-';
+            document.getElementById('modalPax').textContent = pax;
             document.getElementById('modalTotal').textContent = '-';
         }
         modal.style.display = 'flex';
@@ -73,9 +96,6 @@
     }
     document.getElementById('tableModal').addEventListener('click', function(e) {
         if (e.target === this) closeModal();
-    });
-    document.getElementById('btnAddTable').addEventListener('click', function() {
-        alert('Table adding UI is ready for backend expansion.');
     });
 </script>
 @endsection

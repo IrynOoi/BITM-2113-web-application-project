@@ -15,29 +15,29 @@
     <div class="stat-card">
         <div class="stat-icon orders"><i class="fas fa-receipt"></i></div>
         <div class="stat-info">
-            <span class="stat-value">{{ \App\Models\Order::whereDate('created_at', today())->count() }}</span>
-            <span class="stat-label">Total Orders Today</span>
+            <span class="stat-value">{{ $allOrdersCount }}</span>
+            <span class="stat-label">Total Orders</span>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon pending"><i class="fas fa-clock"></i></div>
         <div class="stat-info">
-            <span class="stat-value">{{ \App\Models\Order::whereIn('status', ['pending', 'confirmed', 'preparing'])->count() }}</span>
-            <span class="stat-label">Pending Orders</span>
+            <span class="stat-value">{{ $activeOrdersCount }}</span>
+            <span class="stat-label">Active Orders</span>
         </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon completed"><i class="fas fa-check-circle"></i></div>
         <div class="stat-info">
-            <span class="stat-value">{{ \App\Models\Order::where('status', 'completed')->count() }}</span>
-            <span class="stat-label">Completed</span>
+            <span class="stat-value">{{ $completedOrdersCount }}</span>
+            <span class="stat-label">Completed Orders</span>
         </div>
     </div>
     <div class="stat-card">
-        <div class="stat-icon tables"><i class="fas fa-chair"></i></div>
+        <div class="stat-icon tables"><i class="fas fa-utensils"></i></div>
         <div class="stat-info">
-            <span class="stat-value">12/30</span>
-            <span class="stat-label">Tables Occupied</span>
+            <span class="stat-value">{{ $menuItemsCount }}</span>
+            <span class="stat-label">Menu Items</span>
         </div>
     </div>
 </div>
@@ -52,7 +52,8 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Table</th>
+                    <th>Customer</th>
+                    <th>Type/Table</th>
                     <th>Items</th>
                     <th>Total</th>
                     <th>Status</th>
@@ -64,6 +65,7 @@
                 @forelse($orders as $order)
                     <tr>
                         <td>#{{ $order->id }}</td>
+                        <td>{{ $order->user ? $order->user->full_name : $order->customer_name }}</td>
                         <td>{{ $order->table_number ? 'Table '.$order->table_number : ucfirst($order->order_type) }}</td>
                         <td>{{ $order->items_count }}</td>
                         <td>RM {{ number_format($order->total, 2) }}</td>
@@ -73,31 +75,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td>#1023</td>
-                        <td>Table 5</td>
-                        <td>3</td>
-                        <td>RM 35.00</td>
-                        <td><span class="status-badge pending">Pending</span></td>
-                        <td>10:30 AM</td>
-                        <td><a href="{{ route('staff.orders') }}" class="btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                        <td>#1024</td>
-                        <td>Table 12</td>
-                        <td>5</td>
-                        <td>RM 62.50</td>
-                        <td><span class="status-badge preparing">Preparing</span></td>
-                        <td>10:35 AM</td>
-                        <td><a href="{{ route('staff.orders') }}" class="btn-view">View</a></td>
-                    </tr>
-                    <tr>
-                        <td>#1025</td>
-                        <td>Table 3</td>
-                        <td>2</td>
-                        <td>RM 18.00</td>
-                        <td><span class="status-badge ready">Ready</span></td>
-                        <td>10:20 AM</td>
-                        <td><a href="{{ route('staff.orders') }}" class="btn-view">View</a></td>
+                        <td colspan="8" class="text-center py-4">No recent orders found.</td>
                     </tr>
                 @endforelse
             </tbody>

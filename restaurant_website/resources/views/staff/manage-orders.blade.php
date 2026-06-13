@@ -7,15 +7,23 @@
     <h1>Manage Orders</h1>
 </div>
 
-<div class="filter-bar">
-    <input type="text" placeholder="Search orders..." class="filter-input" id="orderSearch">
-    <select class="filter-select" id="typeFilter">
+<form method="GET" action="{{ route('staff.orders') }}" class="filter-bar" id="filterForm">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="Search orders..." class="filter-input" id="orderSearch">
+    <select name="type" class="filter-select" id="typeFilter" onchange="document.getElementById('filterForm').submit()">
         <option value="">All Types</option>
-        <option value="dine-in">Dine-In</option>
-        <option value="takeaway">Takeaway</option>
-        <option value="delivery">Delivery</option>
+        <option value="dine-in" {{ request('type') == 'dine-in' ? 'selected' : '' }}>Dine-In</option>
+        <option value="takeaway" {{ request('type') == 'takeaway' ? 'selected' : '' }}>Takeaway</option>
+        <option value="delivery" {{ request('type') == 'delivery' ? 'selected' : '' }}>Delivery</option>
     </select>
-</div>
+    <select name="status" class="filter-select" id="statusFilter" onchange="document.getElementById('filterForm').submit()">
+        <option value="">All Statuses</option>
+        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+        <option value="preparing" {{ request('status') == 'preparing' ? 'selected' : '' }}>Preparing</option>
+        <option value="ready" {{ request('status') == 'ready' ? 'selected' : '' }}>Ready</option>
+        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Completed</option>
+    </select>
+    <button type="submit" class="btn-view" style="margin-left:10px;">Search</button>
+</form>
 
 <div class="table-responsive">
     <table class="staff-table">
@@ -39,38 +47,26 @@
                     <td>{{ $order->items_count }} item(s)</td>
                     <td>RM {{ number_format($order->total, 2) }}</td>
                     <td>{{ optional($order->created_at)->format('h:i A') ?? '-' }}</td>
-                    <td><button class="btn-complete" onclick="completeOrder(this)"><i class="fas fa-check"></i> Complete</button></td>
+                    <td>
+                        <form method="POST" action="{{ route('staff.orders.status', $order->id) }}" style="display:inline-block;">
+                            @csrf
+                            @method('PATCH')
+                            <select name="status" onchange="this.form.submit()" class="status-badge {{ $order->status }}" style="border:none; cursor:pointer;">
+                                <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="confirmed" {{ $order->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                                <option value="preparing" {{ $order->status == 'preparing' ? 'selected' : '' }}>Preparing</option>
+                                <option value="ready" {{ $order->status == 'ready' ? 'selected' : '' }}>Ready</option>
+                                <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                            </select>
+                        </form>
+                    </td>
                 </tr>
             @empty
-                <tr data-type="dine-in"><td>#1023</td><td>Dine-In</td><td>Table 5</td><td>Nasi Lemak x2, Iced Tea x1</td><td>RM 35.00</td><td>10:30 AM</td><td><button class="btn-complete" onclick="completeOrder(this)"><i class="fas fa-check"></i> Complete</button></td></tr>
-                <tr data-type="dine-in"><td>#1024</td><td>Dine-In</td><td>Table 12</td><td>Chicken Chop x1, Tom Yum x1</td><td>RM 62.50</td><td>10:35 AM</td><td><button class="btn-complete" onclick="completeOrder(this)"><i class="fas fa-check"></i> Complete</button></td></tr>
-                <tr data-type="delivery"><td>#1026</td><td>Delivery</td><td>-</td><td>Nasi Goreng x2, Mango Smoothie x2</td><td>RM 45.00</td><td>10:15 AM</td><td><button class="btn-complete" onclick="completeOrder(this)"><i class="fas fa-check"></i> Complete</button></td></tr>
+                <tr><td colspan="7" class="text-center py-4">No orders found.</td></tr>
             @endforelse
         </tbody>
     </table>
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function completeOrder(btn) {
-        const row = btn.closest('tr');
-        row.style.transition = 'opacity 0.3s ease';
-        row.style.opacity = '0';
-        setTimeout(() => row.remove(), 300);
-    }
-
-    document.getElementById('orderSearch').addEventListener('input', filterOrders);
-    document.getElementById('typeFilter').addEventListener('change', filterOrders);
-
-    function filterOrders() {
-        const query = document.getElementById('orderSearch').value.toLowerCase();
-        const type = document.getElementById('typeFilter').value;
-        document.querySelectorAll('#ordersBody tr').forEach(row => {
-            const matchesQuery = row.textContent.toLowerCase().includes(query);
-            const matchesType = !type || row.dataset.type === type;
-            row.style.display = matchesQuery && matchesType ? '' : 'none';
-        });
-    }
-</script>
-@endsection
