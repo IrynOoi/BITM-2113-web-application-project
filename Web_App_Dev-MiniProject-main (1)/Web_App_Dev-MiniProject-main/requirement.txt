@@ -1,0 +1,41 @@
+# ========================================
+# Restaurant Order Management System
+# Restoran SUP TULANG ZZ
+# Project Dependencies & Requirements
+# ========================================
+
+# Web Server
+XAMPP >= 8.0 (Apache + MySQL + PHP)
+
+# PHP Version
+PHP >= 7.4
+
+# PHP Extensions
+php-mysqli
+php-pdo
+php-mbstring
+php-json
+php-fileinfo
+
+# Database
+MySQL >= 5.7
+
+# Frontend Dependencies (CDN - no npm required)
+# Font Awesome 6.4.0 (icons)
+# No other external libraries required
+
+# Development Tools
+# VScode 
+# Git for version control
+# GitHub for collaboration
+
+# Browser Support
+# Chrome >= 90
+# Firefox >= 88
+# Safari >= 14
+# Mobile browsers (iOS Safari, Android Chrome)
+
+# Project Structure
+# /frontend   - HTML, CSS, JS files
+# /backend    - PHP API files
+# /database   - SQL schema & seed data

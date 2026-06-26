@@ -1,0 +1,111 @@
+WebMiniProject/
+│
+├── .gitignore                          # Git忽略文件
+├── README.md                           # 项目说明文档
+│
+├── frontend/                           # 🌐 前端代码 (你们负责)
+│   ├── index.html                      # 首页
+│   │
+│   ├── assets/                         # 静态资源
+│   │   ├── css/
+│   │   │   ├── style.css              # 全局样式 + 首页样式
+│   │   │   ├── menu.css               # 菜单页样式
+│   │   │   ├── cart.css               # 购物车样式
+│   │   │   ├── checkout.css           # 结账页样式
+│   │   │   ├── order-tracking.css     # 订单追踪样式
+│   │   │   └── responsive.css         # 响应式设计
+│   │   │
+│   │   ├── js/
+│   │   │   ├── main.js                # 首页交互
+│   │   │   ├── api.js                 # API请求封装
+│   │   │   ├── cart.js                # 购物车逻辑
+│   │   │   ├── menu.js                # 菜单加载
+│   │   │   ├── order.js               # 下单逻辑
+│   │   │   └── utils.js               # 工具函数
+│   │   │
+│   │   ├── images/                    # 图片资源
+│   │   │   ├── hero-bg.jpg           # 首页背景图
+│   │   │   ├── food1.jpg             # 菜品图片
+│   │   │   ├── food2.jpg
+│   │   │   ├── food3.jpg
+│   │   │   ├── menu1.jpg
+│   │   │   ├── menu2.jpg
+│   │   │   ├── menu3.jpg
+│   │   │   ├── menu4.jpg
+│   │   │   ├── about-thumb.jpg       # 关于我们视频封面
+│   │   │   └── logo.png              # 餐厅Logo
+│   │   │
+│   │   ├── video/                    # 视频资源
+│   │   │   ├── promo.mp4            # 首页宣传视频
+│   │   │   └── restaurant-intro.mp4  # 餐厅介绍视频
+│   │   │
+│   │   └── fonts/                    # 自定义字体 (可选)
+│   │
+│   ├── pages/                        # 页面文件
+│   │   ├── customer/                 # 👤 顾客端页面
+│   │   │   ├── scan-order.html      # 扫码点餐页(QR landing)
+│   │   │   ├── menu.html            # 菜单浏览页
+│   │   │   ├── cart.html            # 购物车页
+│   │   │   ├── checkout.html        # 结账页(外卖)
+│   │   │   ├── order-confirmation.html  # 订单确认页
+│   │   │   └── order-status.html    # 订单状态追踪页
+│   │   │
+│   │   ├── waiter/                   # 🧑‍🍳 服务员端页面
+│   │   │   └── waiter-order.html    # 服务员帮点餐页
+│   │   │
+│   │   ├── staff/                    # 👨‍💼 员工管理页面
+│   │   │   ├── dashboard.html       # 订单管理面板
+│   │   │   └── login.html           # 员工登录页
+│   │   │
+│   │   ├── about.html               # 关于我们
+│   │   ├── contact.html             # 联系我们
+│   │   ├── login.html               # 用户登录
+│   │   └── register.html            # 用户注册
+│   │
+│   └── components/                   # 可复用组件 (可选)
+│       ├── header.html              # 公共头部
+│       ├── footer.html              # 公共底部
+│       └── cart-modal.html          # 购物车弹窗
+│
+├── backend/                          # 🔧 后端代码 (后端队友负责)
+│   ├── config/
+│   │   ├── database.php             # 数据库连接配置
+│   │   └── config.php               # 全局配置
+│   │
+│   ├── api/                          # API接口
+│   │   ├── menu.php                 # 菜单CRUD接口
+│   │   ├── orders.php               # 订单处理接口
+│   │   ├── payment.php              # 支付处理接口
+│   │   ├── users.php                # 用户管理接口
+│   │   ├── email.php                # 邮件发送接口
+│   │   └── auth.php                 # 登录验证接口
+│   │
+│   ├── models/                       # 数据模型 (如果用MVC)
+│   │   ├── Menu.php
+│   │   ├── Order.php
+│   │   └── User.php
+│   │
+│   ├── controllers/                  # 控制器 (如果用MVC)
+│   │   ├── MenuController.php
+│   │   ├── OrderController.php
+│   │   └── UserController.php
+│   │
+│   ├── middleware/                    # 中间件
+│   │   └── auth.php                 # 身份验证中间件
+│   │
+│   ├── utils/                        # 后端工具函数
+│   │   ├── validator.php            # 数据验证
+│   │   └── helpers.php              # 辅助函数
+│   │
+│   └── uploads/                      # 上传文件目录
+│       ├── receipts/                 # 付款凭证
+│       └── images/                   # 上传的图片
+│
+├── database/                         # 🗄️ 数据库文件
+│   ├── schema.sql                   # 数据库表结构
+│   ├── seed_data.sql                # 测试数据
+│   └── ERD.png                      # 数据库关系图 (可选)
+│
+└── docs/                             # 📚 文档 (可选)
+    ├── api-documentation.md          # API文档
+    └── project-requirements.md       # 项目需求文档
