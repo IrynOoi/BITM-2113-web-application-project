@@ -1,9 +1,10 @@
+//main.js
 // ========================================
 // MAIN JAVASCRIPT - Home Page
 // ========================================
 
 // Wait for DOM to load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initMobileMenu();
     updateCartBadge();
     initSmoothScroll();
@@ -28,12 +29,12 @@ function initSlider() {
     const arrowLeft = document.getElementById('sliderArrowLeft');
     const arrowRight = document.getElementById('sliderArrowRight');
     const sliderContainer = document.querySelector('.slider-container');
-    
+
     // Exit if slider doesn't exist on this page
     if (!sliderWrapper || dots.length === 0) return;
-    
+
     console.log('🎠 Slider initialized with ' + totalSlides + ' slides');
-    
+
     // Go to specific slide
     function goToSlide(index) {
         // Handle loop
@@ -42,73 +43,73 @@ function initSlider() {
         } else if (index >= totalSlides) {
             index = 0;
         }
-        
+
         currentSlide = index;
         sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-        
+
         // Update dots
         dots.forEach((dot, i) => {
             dot.classList.toggle('active', i === currentSlide);
         });
     }
-    
+
     // Next slide
     function nextSlide() {
         goToSlide(currentSlide + 1);
     }
-    
+
     // Previous slide
     function prevSlide() {
         goToSlide(currentSlide - 1);
     }
-    
+
     // Reset auto-play timer
     function resetAutoPlay() {
         clearInterval(sliderInterval);
         sliderInterval = setInterval(nextSlide, autoPlayDelay);
     }
-    
+
     // Arrow click events
     if (arrowLeft) {
-        arrowLeft.addEventListener('click', function() {
+        arrowLeft.addEventListener('click', function () {
             prevSlide();
             resetAutoPlay();
         });
     }
-    
+
     if (arrowRight) {
-        arrowRight.addEventListener('click', function() {
+        arrowRight.addEventListener('click', function () {
             nextSlide();
             resetAutoPlay();
         });
     }
-    
+
     // Dot click events
-    dots.forEach(function(dot) {
-        dot.addEventListener('click', function() {
+    dots.forEach(function (dot) {
+        dot.addEventListener('click', function () {
             const index = parseInt(this.getAttribute('data-index'));
             goToSlide(index);
             resetAutoPlay();
         });
     });
-    
+
     // Touch/Swipe support for mobile
     let touchStartX = 0;
     let touchEndX = 0;
-    
-    sliderWrapper.addEventListener('touchstart', function(e) {
+
+    sliderWrapper.addEventListener('touchstart', function (e) {
         touchStartX = e.changedTouches[0].screenX;
     }, { passive: true });
-    
-    sliderWrapper.addEventListener('touchend', function(e) {
+
+    sliderWrapper.addEventListener('touchend', function (e) {
         touchEndX = e.changedTouches[0].screenX;
         handleSwipe();
     }, { passive: true });
-    
+
     function handleSwipe() {
         const swipeThreshold = 50;
         const diff = touchStartX - touchEndX;
-        
+
         if (Math.abs(diff) > swipeThreshold) {
             if (diff > 0) {
                 nextSlide(); // Swipe left → go to next
@@ -118,15 +119,15 @@ function initSlider() {
             resetAutoPlay();
         }
     }
-    
+
     // Keyboard navigation
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         const sliderSection = document.querySelector('.image-slider-section');
         if (!sliderSection) return;
-        
+
         const rect = sliderSection.getBoundingClientRect();
         const isInView = rect.top < window.innerHeight && rect.bottom > 0;
-        
+
         if (isInView) {
             if (e.key === 'ArrowLeft') {
                 prevSlide();
@@ -137,18 +138,18 @@ function initSlider() {
             }
         }
     });
-    
+
     // Pause on hover
     if (sliderContainer) {
-        sliderContainer.addEventListener('mouseenter', function() {
+        sliderContainer.addEventListener('mouseenter', function () {
             clearInterval(sliderInterval);
         });
-        
-        sliderContainer.addEventListener('mouseleave', function() {
+
+        sliderContainer.addEventListener('mouseleave', function () {
             sliderInterval = setInterval(nextSlide, autoPlayDelay);
         });
     }
-    
+
     // Start auto-play
     sliderInterval = setInterval(nextSlide, autoPlayDelay);
 }
@@ -159,11 +160,11 @@ function initSlider() {
 function initMobileMenu() {
     const menuToggle = document.getElementById('menuToggle');
     const desktopNav = document.getElementById('desktopNav');
-    
+
     if (menuToggle && desktopNav) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function () {
             desktopNav.classList.toggle('active');
-            
+
             // Change icon
             const icon = menuToggle.querySelector('i');
             if (desktopNav.classList.contains('active')) {
@@ -172,9 +173,9 @@ function initMobileMenu() {
                 icon.className = 'fas fa-bars';
             }
         });
-        
+
         // Close menu when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!menuToggle.contains(event.target) && !desktopNav.contains(event.target)) {
                 desktopNav.classList.remove('active');
                 const icon = menuToggle.querySelector('i');
@@ -201,10 +202,10 @@ function saveCart(cart) {
 // Add item to cart
 function addToCart(id, name, price, image = '') {
     const cart = getCart();
-    
+
     // Check if item already exists
     const existingItem = cart.find(item => item.id === id);
-    
+
     if (existingItem) {
         existingItem.quantity += 1;
     } else {
@@ -216,10 +217,10 @@ function addToCart(id, name, price, image = '') {
             quantity: 1
         });
     }
-    
+
     saveCart(cart);
     updateCartBadge();
-    
+
     // Show success animation
     showAddToCartAnimation(name);
 }
@@ -236,7 +237,7 @@ function removeFromCart(id) {
 function updateQuantity(id, quantity) {
     const cart = getCart();
     const item = cart.find(item => item.id === id);
-    
+
     if (item) {
         item.quantity = quantity;
         if (item.quantity <= 0) {
@@ -245,7 +246,7 @@ function updateQuantity(id, quantity) {
             saveCart(cart);
         }
     }
-    
+
     updateCartBadge();
 }
 
@@ -265,10 +266,10 @@ function getCartCount() {
 function updateCartBadge() {
     const badges = document.querySelectorAll('.cart-badge');
     const count = getCartCount();
-    
+
     badges.forEach(badge => {
         badge.textContent = count;
-        
+
         // Hide badge if cart is empty
         if (count === 0) {
             badge.style.display = 'none';
@@ -292,7 +293,7 @@ function showAddToCartAnimation(itemName) {
         <i class="fas fa-check-circle"></i>
         <span>${itemName} added to cart!</span>
     `;
-    
+
     // Style the toast
     toast.style.cssText = `
         position: fixed;
@@ -312,9 +313,9 @@ function showAddToCartAnimation(itemName) {
         align-items: center;
         gap: 8px;
     `;
-    
+
     document.body.appendChild(toast);
-    
+
     // Remove after 2 seconds
     setTimeout(() => {
         toast.style.animation = 'fadeOutDown 0.3s ease';
@@ -344,7 +345,7 @@ document.head.appendChild(style);
 // INIT ADD TO CART BUTTONS
 // ========================================
 function initAddToCartButtons() {
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (event.target.closest('.btn-add-cart')) {
             const button = event.target.closest('.btn-add-cart');
         }
@@ -356,7 +357,7 @@ function initAddToCartButtons() {
 // ========================================
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             const href = this.getAttribute('href');
             if (href !== '#') {
                 e.preventDefault();
@@ -377,10 +378,10 @@ function initSmoothScroll() {
 // ========================================
 function initHeaderScroll() {
     const header = document.querySelector('.header');
-    
+
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+
         if (currentScroll > 50) {
             header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
         } else {
@@ -394,9 +395,9 @@ function initHeaderScroll() {
 // ========================================
 function initSearch() {
     const searchInput = document.querySelector('.search-bar input');
-    
+
     if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
+        searchInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 const query = this.value.trim();
                 if (query) {
@@ -418,7 +419,7 @@ function loadPopularItems() {
 function renderPopularItems(items) {
     const popularGrid = document.querySelector('.popular-grid');
     if (!popularGrid) return;
-    
+
     popularGrid.innerHTML = items.map(item => `
         <div class="popular-item">
             <img src="${item.image}" alt="${item.name}">
@@ -433,9 +434,9 @@ function renderPopularItems(items) {
 // ========================================
 function initVideoFallback() {
     const videos = document.querySelectorAll('video');
-    
+
     videos.forEach(video => {
-        video.addEventListener('error', function() {
+        video.addEventListener('error', function () {
             const fallback = this.querySelector('img');
             if (fallback) {
                 this.style.display = 'none';
@@ -464,7 +465,7 @@ function initLazyLoading() {
                 }
             });
         });
-        
+
         document.querySelectorAll('img[data-src]').forEach(img => {
             imageObserver.observe(img);
         });

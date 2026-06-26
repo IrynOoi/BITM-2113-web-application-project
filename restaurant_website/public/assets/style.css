@@ -1,36 +1,44 @@
+/* style.css */
 /* ========================================
    ROOT VARIABLES - 配色方案
    ======================================== */
 :root {
     /* 主色调 */
-    --primary: #FF8C00;           /* Orange - Button */
-    --primary-dark: #E67A00;      /* Dark Orange - Hover */
-    --primary-light: #FFB84D;     /* Light Orange */
-    
+    --primary: #FF8C00;
+    /* Orange - Button */
+    --primary-dark: #E67A00;
+    /* Dark Orange - Hover */
+    --primary-light: #FFB84D;
+    /* Light Orange */
+
     /* 背景色 */
-    --bg-primary: #FDF5EE;        /* Main Background - Warm White */
-    --bg-white: #FFFFFF;          /* White - Cards */
-    --bg-navbar: #FFFFFF;         /* Navbar - White */
-    --bg-footer: #2C2C2C;         /* Footer - Dark */
-    
+    --bg-primary: #FDF5EE;
+    /* Main Background - Warm White */
+    --bg-white: #FFFFFF;
+    /* White - Cards */
+    --bg-navbar: #FFFFFF;
+    /* Navbar - White */
+    --bg-footer: #2C2C2C;
+    /* Footer - Dark */
+
     /* 文字色 */
     --text-dark: #333333;
     --text-medium: #666666;
     --text-light: #999999;
     --text-white: #FFFFFF;
-    
+
     /* 边框和阴影 */
     --border-color: #E8E0D5;
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
     --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
-    
+
     /* 圆角 */
     --radius-sm: 8px;
     --radius-md: 12px;
     --radius-lg: 20px;
     --radius-full: 50%;
-    
+
     /* 间距 */
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
@@ -38,7 +46,7 @@
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
     --spacing-2xl: 4rem;
-    
+
     /* 字体 */
     --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --font-heading: 'Georgia', serif;
@@ -90,9 +98,12 @@ img {
    HEADER & NAVBAR - Glass Effect
    ======================================== */
 .header {
-    background: rgba(92, 60, 28, 0.75);  /* 半透明白色 */
-    backdrop-filter: blur(5px);            /* 玻璃模糊效果 */
-    -webkit-backdrop-filter: blur(20px);    /* Safari 兼容 */
+    background: rgba(92, 60, 28, 0.75);
+    /* 半透明白色 */
+    backdrop-filter: blur(5px);
+    /* 玻璃模糊效果 */
+    -webkit-backdrop-filter: blur(20px);
+    /* Safari 兼容 */
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
     position: sticky;
@@ -198,7 +209,8 @@ img {
 /* Desktop Navigation */
 .desktop-nav {
     border-top: 1px solid rgba(0, 0, 0, 0.05);
-    background: #205d05; /*Orange:#ef880a Old Green:#205d05 */
+    background: #205d05;
+    /*Orange:#ef880a Old Green:#205d05 */
 }
 
 .desktop-nav ul {
@@ -254,7 +266,8 @@ img {
     color: var(--primary) !important;
     border-color: #ffffff !important;
     filter: brightness(90%) !important;
-    transform: translateY(-1px) !important; /* Tiny upward lift */
+    transform: translateY(-1px) !important;
+    /* Tiny upward lift */
 }
 
 /* ========================================
@@ -289,12 +302,10 @@ img {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        135deg,
-        rgba(0, 0, 0, 0.7) 0%,
-        rgba(0, 0, 0, 0.4) 50%,
-        rgba(0, 0, 0, 0.6) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(0, 0, 0, 0.7) 0%,
+            rgba(0, 0, 0, 0.4) 50%,
+            rgba(0, 0, 0, 0.6) 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -928,7 +939,8 @@ img {
    FOOTER
    ======================================== */
 .footer {
-    background-color: var(--bg-footer); /* Old Green： #205d05*/
+    background-color: var(--bg-footer);
+    /* Old Green： #205d05*/
     color: #CCCCCC;
     padding: var(--spacing-2xl) 0 var(--spacing-md);
 }
@@ -1071,6 +1083,7 @@ img {
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1078,9 +1091,12 @@ img {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -1093,32 +1109,33 @@ img {
     .hero-content h1 {
         font-size: 2.5rem;
     }
-    
+
     .about-grid {
         grid-template-columns: 1fr;
     }
 }
 
 @media (max-width: 768px) {
+
     /* Header - Mobile */
     .logo {
         position: static;
         transform: none;
     }
-    
+
     .logo-img {
         width: 35px;
         height: 35px;
     }
-    
+
     .logo h1 {
         font-size: 1rem;
     }
-    
+
     .desktop-nav {
         display: none;
     }
-    
+
     .desktop-nav.active {
         display: block;
         position: absolute;
@@ -1130,70 +1147,70 @@ img {
         -webkit-backdrop-filter: blur(20px);
         box-shadow: var(--shadow-md);
     }
-    
+
     .desktop-nav.active ul {
         flex-direction: column;
     }
-    
+
     .desktop-nav.active ul li a {
         padding: 1rem var(--spacing-md);
         border-bottom: 1px solid var(--border-color);
     }
-    
+
     .menu-toggle {
         display: block;
     }
-    
+
     /* Hero */
     .hero {
         height: 60vh;
         min-height: 400px;
     }
-    
+
     .hero-content h1 {
         font-size: 1.8rem;
     }
-    
+
     .hero-subtitle {
         font-size: 1rem;
     }
-    
+
     .btn-primary,
     .btn-secondary {
         padding: 0.8rem 1.8rem;
         font-size: 0.95rem;
     }
-    
+
     /* Sections */
     .section {
         padding: var(--spacing-xl) 0;
     }
-    
+
     .section-header h2 {
         font-size: 1.6rem;
     }
-    
+
     .specials-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .popular-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .category-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     /* Mobile Nav */
     .mobile-nav {
         display: flex;
     }
-    
+
     body {
         padding-bottom: 70px;
     }
-    
+
     .footer {
         padding-bottom: 90px;
     }
@@ -1224,24 +1241,24 @@ img {
         height: 50vh;
         min-height: 350px;
     }
-    
+
     .hero-content h1 {
         font-size: 1.5rem;
     }
-    
+
     .hero-buttons {
         flex-direction: column;
         align-items: center;
     }
-    
+
     .popular-grid {
         grid-template-columns: 1fr 1fr;
     }
-    
+
     .category-grid {
         grid-template-columns: 1fr 1fr;
     }
-    
+
     .quick-links {
         grid-template-columns: 1fr 1fr;
     }

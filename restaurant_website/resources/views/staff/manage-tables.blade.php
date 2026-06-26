@@ -7,16 +7,35 @@
     <h1>Manage Tables</h1>
     <form method="POST" action="{{ route('staff.tables.store') }}" style="display:flex; gap:10px; align-items:center;">
         @csrf
-        <input type="number" name="table_number" placeholder="Table Number" required class="filter-input" style="width: 150px;">
-        <input type="number" name="capacity" placeholder="Capacity (Pax)" required class="filter-input" style="width: 150px;" value="4">
+        <input type="number" name="table_number" placeholder="Table Number" required min="1" max="30" class="filter-input" style="width: 150px;">
+        <input type="number" name="capacity" placeholder="Capacity (Pax)" required min="1" max="10" class="filter-input" style="width: 150px;" value="4">
         <button type="submit" class="btn-add"><i class="fas fa-plus"></i> Add Table</button>
     </form>
 </div>
 
 <div class="tables-grid">
+    @php
+        $localIp = request()->getHost();
+        if ($localIp === '127.0.0.1' || $localIp === 'localhost') {
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                exec('ipconfig', $output);
+                foreach ($output as $line) {
+                    if (preg_match('/IPv4 Address.*: (192\.168\.\d+\.\d+)/', $line, $matches)) {
+                        $localIp = $matches[1];
+                        if (substr($localIp, -2) !== '.1') break;
+                    }
+                }
+            } else {
+                $localIp = trim(exec("hostname -I | awk '{print $1}'")) ?: $localIp;
+            }
+        }
+        $port = request()->getPort();
+    @endphp
+
     @forelse($tables as $table)
         @php
-            $qrUrl = 'https://chart.googleapis.com/chart?chs=300x300&cht=qr&chl=' . urlencode(route('customer.qr-order', ['table' => $table->table_number])) . '&choe=UTF-8';
+            $qrOrderUrl = "http://{$localIp}:{$port}/customer/qr-order?table=" . $table->table_number;
+            $qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qrOrderUrl);
             $activeOrder = \App\Models\Order::where('table_number', $table->table_number)
                                             ->whereIn('status', ['pending', 'confirmed', 'preparing', 'ready'])
                                             ->first();

@@ -1,8 +1,9 @@
+//cart.js
 // ========================================
 // CART PAGE JAVASCRIPT
 // ========================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initCart();
     initClearCart();
     initCheckout();
@@ -28,18 +29,18 @@ function initCart() {
     const cart = getCart();
     const cartEmpty = document.getElementById('cartEmpty');
     const cartContent = document.getElementById('cartContent');
-    
+
     if (cart.length === 0) {
         // Show empty state
         cartEmpty.style.display = 'block';
         cartContent.style.display = 'none';
         return;
     }
-    
+
     // Show cart content
     cartEmpty.style.display = 'none';
     cartContent.style.display = 'block';
-    
+
     renderCartItems(cart);
     updateCartSummary(cart);
     updateBadges(cart);
@@ -51,10 +52,10 @@ function initCart() {
 function renderCartItems(cart) {
     const cartItemsList = document.getElementById('cartItemsList');
     const cartItemCount = document.getElementById('cartItemCount');
-    
+
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartItemCount.textContent = totalItems;
-    
+
     cartItemsList.innerHTML = cart.map((item, index) => `
         <div class="cart-item" data-index="${index}">
             <div class="cart-item-image">
@@ -85,15 +86,15 @@ function renderCartItems(cart) {
 // ========================================
 function updateQuantity(index, change) {
     const cart = getCart();
-    
+
     if (index >= 0 && index < cart.length) {
         cart[index].quantity += change;
-        
+
         if (cart[index].quantity <= 0) {
             removeItem(index);
             return;
         }
-        
+
         saveCart(cart);
         renderCartItems(cart);
         updateCartSummary(cart);
@@ -106,18 +107,18 @@ function updateQuantity(index, change) {
 // ========================================
 function removeItem(index) {
     const cart = getCart();
-    
+
     if (index >= 0 && index < cart.length) {
         // Animate removal
         const cartItem = document.querySelector(`.cart-item[data-index="${index}"]`);
         if (cartItem) {
             cartItem.classList.add('removing');
         }
-        
+
         setTimeout(() => {
             cart.splice(index, 1);
             saveCart(cart);
-            
+
             if (cart.length === 0) {
                 document.getElementById('cartEmpty').style.display = 'block';
                 document.getElementById('cartContent').style.display = 'none';
@@ -137,11 +138,11 @@ function updateCartSummary(cart) {
     const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const tax = subtotal * 0.06;
     const total = subtotal + tax;
-    
+
     document.getElementById('summarySubtotal').textContent = `RM ${subtotal.toFixed(2)}`;
     document.getElementById('summaryTax').textContent = `RM ${tax.toFixed(2)}`;
     document.getElementById('summaryTotal').textContent = `RM ${total.toFixed(2)}`;
-    
+
     // Checkout button is always enabled - click handler validates
 }
 
@@ -150,7 +151,7 @@ function updateCartSummary(cart) {
 // ========================================
 function updateBadges(cart) {
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
+
     document.querySelectorAll('.cart-badge').forEach(badge => {
         badge.textContent = count;
         badge.style.display = count > 0 ? 'flex' : 'none';
@@ -165,27 +166,27 @@ function initClearCart() {
     const confirmModal = document.getElementById('confirmModal');
     const btnCancelClear = document.getElementById('btnCancelClear');
     const btnConfirmClear = document.getElementById('btnConfirmClear');
-    
+
     if (!btnClearCart) return;
-    
-    btnClearCart.addEventListener('click', function() {
+
+    btnClearCart.addEventListener('click', function () {
         confirmModal.style.display = 'flex';
     });
-    
-    btnCancelClear.addEventListener('click', function() {
+
+    btnCancelClear.addEventListener('click', function () {
         confirmModal.style.display = 'none';
     });
-    
-    btnConfirmClear.addEventListener('click', function() {
+
+    btnConfirmClear.addEventListener('click', function () {
         localStorage.removeItem('restaurantCart');
         confirmModal.style.display = 'none';
         document.getElementById('cartEmpty').style.display = 'block';
         document.getElementById('cartContent').style.display = 'none';
         updateBadges([]);
     });
-    
+
     // Close modal on overlay click
-    confirmModal.addEventListener('click', function(e) {
+    confirmModal.addEventListener('click', function (e) {
         if (e.target === confirmModal) {
             confirmModal.style.display = 'none';
         }
@@ -197,10 +198,10 @@ function initClearCart() {
 // ========================================
 function initCheckout() {
     const btnCheckout = document.getElementById('btnCheckout');
-    
+
     if (!btnCheckout) return;
-    
-    btnCheckout.addEventListener('click', function() {
+
+    btnCheckout.addEventListener('click', function () {
         // Check cart is not empty
         if (getCart().length === 0) {
             alert('Your cart is empty! Please add items before checking out.');
@@ -224,7 +225,7 @@ function initCheckout() {
 function initOrderType() {
     const orderTypeInputs = document.querySelectorAll('input[name="orderType"]');
     const btnCheckout = document.getElementById('btnCheckout');
-    
+
     // Set default button text based on default checked value
     const defaultType = document.querySelector('input[name="orderType"]:checked')?.value;
     if (btnCheckout) {
@@ -234,7 +235,7 @@ function initOrderType() {
     }
 
     orderTypeInputs.forEach(input => {
-        input.addEventListener('change', function() {
+        input.addEventListener('change', function () {
             if (this.value === 'online') {
                 btnCheckout.innerHTML = '<i class="fas fa-lock"></i> Proceed to Checkout';
             } else {
@@ -250,9 +251,9 @@ function initOrderType() {
 function initMobileMenu() {
     const menuToggle = document.getElementById('menuToggle');
     const desktopNav = document.getElementById('desktopNav');
-    
+
     if (menuToggle && desktopNav) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function () {
             desktopNav.classList.toggle('active');
             const icon = menuToggle.querySelector('i');
             icon.className = desktopNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';

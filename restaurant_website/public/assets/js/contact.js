@@ -1,8 +1,9 @@
+//contact.js
 // ========================================
 // CONTACT PAGE JAVASCRIPT
 // ========================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initMobileMenu();
     updateCartBadge();
     initContactForm();
@@ -14,22 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
 function initContactForm() {
     const form = document.getElementById('contactForm');
     if (!form) return;
-    
-    form.addEventListener('submit', function(e) {
+
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         // Clear previous errors
         clearErrors();
-        
+
         // Get form values
         const fullName = document.getElementById('fullName').value.trim();
         const email = document.getElementById('email').value.trim();
         const subject = document.getElementById('subject').value;
         const message = document.getElementById('message').value.trim();
-        
+
         // Validate
         let isValid = true;
-        
+
         if (!fullName) {
             showError('fullName', 'nameError', 'Please enter your full name');
             isValid = false;
@@ -37,7 +38,7 @@ function initContactForm() {
             showError('fullName', 'nameError', 'Name must be at least 3 characters');
             isValid = false;
         }
-        
+
         if (!email) {
             showError('email', 'emailError', 'Please enter your email address');
             isValid = false;
@@ -45,12 +46,12 @@ function initContactForm() {
             showError('email', 'emailError', 'Please enter a valid email address');
             isValid = false;
         }
-        
+
         if (!subject) {
             showError('subject', 'subjectError', 'Please select a topic');
             isValid = false;
         }
-        
+
         if (!message) {
             showError('message', 'messageError', 'Please enter your message');
             isValid = false;
@@ -58,23 +59,23 @@ function initContactForm() {
             showError('message', 'messageError', 'Message must be at least 10 characters');
             isValid = false;
         }
-        
+
         if (isValid) {
             // Show success modal
             showSuccessModal();
-            
+
             // Reset form
             form.reset();
-            
+
             // In production, send data to backend here
             console.log('Form submitted:', { fullName, email, subject, message });
         }
     });
-    
+
     // Real-time error clearing
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             this.classList.remove('error');
             const errorId = this.id + 'Error';
             const errorEl = document.getElementById(errorId);
@@ -89,7 +90,7 @@ function initContactForm() {
 function showError(inputId, errorId, message) {
     const input = document.getElementById(inputId);
     const errorEl = document.getElementById(errorId);
-    
+
     if (input) input.classList.add('error');
     if (errorEl) errorEl.textContent = message;
 }
@@ -116,27 +117,27 @@ function isValidEmail(email) {
 function showSuccessModal() {
     const modal = document.getElementById('successModal');
     const closeBtn = document.getElementById('btnCloseModal');
-    
+
     if (!modal) return;
-    
+
     modal.style.display = 'flex';
-    
+
     // Close button
     if (closeBtn) {
-        closeBtn.addEventListener('click', function() {
+        closeBtn.addEventListener('click', function () {
             modal.style.display = 'none';
         });
     }
-    
+
     // Close on overlay click
-    modal.addEventListener('click', function(e) {
+    modal.addEventListener('click', function (e) {
         if (e.target === modal) {
             modal.style.display = 'none';
         }
     });
-    
+
     // Close on Escape key
-    document.addEventListener('keydown', function(e) {
+    document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && modal.style.display === 'flex') {
             modal.style.display = 'none';
         }
@@ -149,15 +150,15 @@ function showSuccessModal() {
 function initMobileMenu() {
     const menuToggle = document.getElementById('menuToggle');
     const desktopNav = document.getElementById('desktopNav');
-    
+
     if (menuToggle && desktopNav) {
-        menuToggle.addEventListener('click', function() {
+        menuToggle.addEventListener('click', function () {
             desktopNav.classList.toggle('active');
             const icon = menuToggle.querySelector('i');
             icon.className = desktopNav.classList.contains('active') ? 'fas fa-times' : 'fas fa-bars';
         });
-        
-        document.addEventListener('click', function(event) {
+
+        document.addEventListener('click', function (event) {
             if (!menuToggle.contains(event.target) && !desktopNav.contains(event.target)) {
                 desktopNav.classList.remove('active');
                 menuToggle.querySelector('i').className = 'fas fa-bars';
@@ -172,7 +173,7 @@ function initMobileMenu() {
 function updateCartBadge() {
     const cart = JSON.parse(localStorage.getItem('restaurantCart') || '[]');
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
+
     const badge = document.getElementById('cartBadge');
     if (badge) {
         badge.textContent = count;

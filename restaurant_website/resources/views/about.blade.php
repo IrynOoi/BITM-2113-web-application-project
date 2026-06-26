@@ -1,3 +1,4 @@
+<!-- about.blade.php -->
 @extends('layouts.frontend')
 
 @section('title', 'About Us - Restoran SUP TULANG ZZ')
@@ -23,23 +24,23 @@
                 <h2>Our Story</h2>
                 <p>How it all began</p>
             </div>
-            
+
             <div class="story-content">
                 <p>
-                    <strong>Restoran SUP TULANG ZZ</strong> was founded in 2015 with a simple mission: 
-                    to serve the most authentic and delicious Sup Tulang (bone marrow soup) in Melaka. 
-                    What started as a small family-run stall has grown into one of the most beloved 
+                    <strong>Restoran SUP TULANG ZZ</strong> was founded in 2015 with a simple mission:
+                    to serve the most authentic and delicious Sup Tulang (bone marrow soup) in Melaka.
+                    What started as a small family-run stall has grown into one of the most beloved
                     restaurants in the region.
                 </p>
                 <p>
-                    Our founder, Zulkifli Zainal, learned the art of making Sup Tulang from his grandmother, 
-                    who passed down the secret family recipe through generations. Using only the freshest 
-                    ingredients and traditional cooking methods, each bowl of soup is slow-cooked for over 
+                    Our founder, Zulkifli Zainal, learned the art of making Sup Tulang from his grandmother,
+                    who passed down the secret family recipe through generations. Using only the freshest
+                    ingredients and traditional cooking methods, each bowl of soup is slow-cooked for over
                     8 hours to achieve that rich, flavorful broth our customers love.
                 </p>
                 <p>
-                    Today, we continue to uphold that tradition while expanding our menu to include 
-                    a variety of Malaysian favorites — from fragrant Nasi Lemak to spicy Tom Yum Soup. 
+                    Today, we continue to uphold that tradition while expanding our menu to include
+                    a variety of Malaysian favorites — from fragrant Nasi Lemak to spicy Tom Yum Soup.
                     Every dish is prepared with the same care and passion that started it all.
                 </p>
             </div>
@@ -56,15 +57,15 @@
                         Your browser does not support video.
                     </video>
                 </div>
-                
+
                 <div class="about-content">
                     <h2>Why Choose Us</h2>
                     <p class="about-story">
-                        We take pride in delivering not just meals, but memorable dining experiences. 
-                        Every ingredient is handpicked, every recipe is perfected, and every customer 
+                        We take pride in delivering not just meals, but memorable dining experiences.
+                        Every ingredient is handpicked, every recipe is perfected, and every customer
                         is treated like family.
                     </p>
-                    
+
                     <div class="about-features">
                         <div class="feature">
                             <i class="fas fa-check-circle"></i>
@@ -91,7 +92,7 @@
                             <span>Free Wi-Fi</span>
                         </div>
                     </div>
-                    
+
                     <div class="opening-hours">
                         <h3><i class="far fa-clock"></i> Opening Hours</h3>
                         <p>Monday - Sunday: 10:00 AM - 10:00 PM</p>
@@ -109,7 +110,7 @@
                 <h2>Our Values</h2>
                 <p>What drives us every day</p>
             </div>
-            
+
             <div class="values-grid">
                 <div class="value-card">
                     <div class="value-icon">
@@ -118,7 +119,7 @@
                     <h3>Passion</h3>
                     <p>We pour our heart into every dish we serve, ensuring each bite is filled with love and tradition.</p>
                 </div>
-                
+
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-star"></i>
@@ -126,7 +127,7 @@
                     <h3>Quality</h3>
                     <p>Only the finest ingredients make it to your plate. We never compromise on quality.</p>
                 </div>
-                
+
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-users"></i>
@@ -134,7 +135,7 @@
                     <h3>Community</h3>
                     <p>We believe in bringing people together through food. Our restaurant is a place for everyone.</p>
                 </div>
-                
+
                 <div class="value-card">
                     <div class="value-icon">
                         <i class="fas fa-leaf"></i>
@@ -153,7 +154,7 @@
                 <h2>Meet Our Team</h2>
                 <p>The people behind the magic</p>
             </div>
-            
+
             <div class="team-grid">
                 <div class="team-card">
                     <div class="team-image">
@@ -162,7 +163,7 @@
                     <h3>Chef Zulkifli</h3>
                     <span class="team-role">Founder & Head Chef</span>
                 </div>
-                
+
                 <div class="team-card">
                     <div class="team-image">
                         <img src="{{ asset('assets/images/Our Team/Chef.jpeg') }}" alt="Sous Chef">
@@ -178,7 +179,7 @@
                     <h3>Chef Amir</h3>
                     <span class="team-role">Sous Chef</span>
                 </div>
-                
+
                 <div class="team-card">
                     <div class="team-image">
                         <img src="{{ asset('assets/images/Our Team/Manager.jpeg') }}" alt="Manager">

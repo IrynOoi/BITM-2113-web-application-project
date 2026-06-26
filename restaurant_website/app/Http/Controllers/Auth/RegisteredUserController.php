@@ -1,5 +1,5 @@
 <?php
-
+// <!-- app/Http/Controllers/Auth/RegisteredUserController.php -->
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -33,7 +33,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'fullName' => ['required', 'string', 'max:100'],
             'phone' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 

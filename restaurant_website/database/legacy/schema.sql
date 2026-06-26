@@ -5,7 +5,7 @@
 -- ============================================================
 
 -- Create and select the database
-CREATE DATABASE IF NOT EXISTS restaurant_oms
+CREATE DATABASE IF NOT EXISTS restaurant_oms_latest
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
@@ -80,6 +80,17 @@ CREATE TABLE IF NOT EXISTS order_items (
     line_total  DECIMAL(8,2) NOT NULL,
     FOREIGN KEY (order_id)     REFERENCES orders(id)     ON DELETE CASCADE,
     FOREIGN KEY (menu_item_id) REFERENCES menu_items(id) ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- ─────────────────────────────────────────────
+-- Table 5: tables
+-- ─────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS tables (
+    id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    table_number INT UNSIGNED NOT NULL UNIQUE,
+    capacity    INT UNSIGNED NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 -- ─────────────────────────────────────────────

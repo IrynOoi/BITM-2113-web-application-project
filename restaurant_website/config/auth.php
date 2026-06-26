@@ -1,5 +1,5 @@
 <?php
-
+// <!-- auth.php -->
 use App\Models\User;
 
 return [

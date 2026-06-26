@@ -1,3 +1,4 @@
+<!-- contact.blade.php -->
 @extends('layouts.frontend')
 
 @section('title', 'Contact Us - Restoran SUP TULANG ZZ')
@@ -29,12 +30,12 @@
                     <div class="contact-info-header">
                         <h2>Get In Touch</h2>
                         <p>
-                            Have a question, feedback, or want to make a reservation? 
-                            Drop us a message and we'll get back to you within 24 hours. 
+                            Have a question, feedback, or want to make a reservation?
+                            Drop us a message and we'll get back to you within 24 hours.
                             We're always happy to help!
                         </p>
                     </div>
-                    
+
                     <div class="contact-details">
                         <div class="contact-detail-item">
                             <div class="contact-detail-icon">
@@ -45,7 +46,7 @@
                                 <p>Jalan Example, Taman Melaka Raya,<br>75000 Melaka, Malaysia</p>
                             </div>
                         </div>
-                        
+
                         <div class="contact-detail-item">
                             <div class="contact-detail-icon">
                                 <i class="fas fa-phone"></i>
@@ -55,7 +56,7 @@
                                 <p>012-3456789<br>06-123 4567</p>
                             </div>
                         </div>
-                        
+
                         <div class="contact-detail-item">
                             <div class="contact-detail-icon">
                                 <i class="fas fa-envelope"></i>
@@ -65,7 +66,7 @@
                                 <p>info@suptulangzz.com<br>reservations@suptulangzz.com</p>
                             </div>
                         </div>
-                        
+
                         <div class="contact-detail-item">
                             <div class="contact-detail-icon">
                                 <i class="far fa-clock"></i>
@@ -76,7 +77,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Social Media -->
                     <div class="contact-social">
                         <h4>Follow Us</h4>
@@ -87,24 +88,25 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Right: Contact Form -->
                 <div class="contact-form-wrapper">
                     <div class="contact-form-card">
                         <h3>Send Us a Message</h3>
                         <p class="form-subtitle">Fill in the form below and we'll get right back to you ✨</p>
-                        
+
                         <form class="contact-form" id="contactForm">
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="fullName">Full Name <span class="required">*</span></label>
                                     <div class="input-wrapper">
                                         <i class="fas fa-user"></i>
-                                        <input type="text" id="fullName" name="fullName" placeholder="Your full name" required>
+                                        <input type="text" id="fullName" name="fullName" placeholder="Your full name"
+                                            required>
                                     </div>
                                     <span class="error-message" id="nameError"></span>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label for="email">Email Address <span class="required">*</span></label>
                                     <div class="input-wrapper">
@@ -114,7 +116,7 @@
                                     <span class="error-message" id="emailError"></span>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
                                 <div class="input-wrapper">
@@ -122,7 +124,7 @@
                                     <input type="tel" id="phone" name="phone" placeholder="012-3456789">
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="subject">Subject <span class="required">*</span></label>
                                 <div class="input-wrapper">
@@ -139,16 +141,17 @@
                                 </div>
                                 <span class="error-message" id="subjectError"></span>
                             </div>
-                            
+
                             <div class="form-group">
                                 <label for="message">Your Message <span class="required">*</span></label>
                                 <div class="input-wrapper textarea-wrapper">
                                     <i class="fas fa-comment"></i>
-                                    <textarea id="message" name="message" rows="5" placeholder="Tell us how we can help you..." required></textarea>
+                                    <textarea id="message" name="message" rows="5"
+                                        placeholder="Tell us how we can help you..." required></textarea>
                                 </div>
                                 <span class="error-message" id="messageError"></span>
                             </div>
-                            
+
                             <button type="submit" class="btn-submit">
                                 <i class="fas fa-paper-plane"></i> Send Message
                             </button>
@@ -166,8 +169,10 @@
                 <i class="fas fa-check-circle"></i>
             </div>
             <h2>Message Sent Successfully!</h2>
-            <p>Thank you for reaching out! We've received your message and our team will get back to you within <strong>24 hours</strong>.</p>
-            <p class="success-subtitle">In the meantime, feel free to browse our menu or check out our latest promotions!</p>
+            <p>Thank you for reaching out! We've received your message and our team will get back to you within <strong>24
+                    hours</strong>.</p>
+            <p class="success-subtitle">In the meantime, feel free to browse our menu or check out our latest promotions!
+            </p>
             <div class="modal-actions">
                 <a href="{{ url('menu') }}" class="btn-primary">
                     <i class="fas fa-utensils"></i> Browse Menu

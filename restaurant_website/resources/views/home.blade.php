@@ -1,3 +1,4 @@
+<!-- home.blade.php -->
 @extends('layouts.frontend')
 
 @section('content')
@@ -36,7 +37,8 @@
             <div class="specials-grid">
                 <div class="special-card">
                     <div class="card-image">
-                        <img src="{{ asset('assets/images/Today special/Sup Gearbox Kambing.jpeg') }}" alt="Sup Gearbox Kambing">
+                        <img src="{{ asset('assets/images/Today special/Sup Gearbox Kambing.jpeg') }}"
+                            alt="Sup Gearbox Kambing">
                         <span class="discount-badge">-21%</span>
                     </div>
                     <div class="card-content">
@@ -54,7 +56,8 @@
 
                 <div class="special-card">
                     <div class="card-image">
-                        <img src="{{ asset('assets/images/Today special/Nasi Siakap Goreng Berlado.jpg') }}" alt="Nasi Siakap Goreng Berlado">
+                        <img src="{{ asset('assets/images/Today special/Nasi Siakap Goreng Berlado.jpg') }}"
+                            alt="Nasi Siakap Goreng Berlado">
                         <span class="discount-badge">-10%</span>
                     </div>
                     <div class="card-content">
@@ -98,26 +101,28 @@
                 <h2>Popular Menu</h2>
                 <p>Most ordered by our customers</p>
             </div>
-            
+
             <div class="popular-grid">
                 <div class="popular-item">
-                    <img src="{{ asset('assets/images/Popular menu/Mee Rebus Gearbox Kambing.jpeg') }}" alt="Mee Rebus Gearbox Kambing">
+                    <img src="{{ asset('assets/images/Popular menu/Mee Rebus Gearbox Kambing.jpeg') }}"
+                        alt="Mee Rebus Gearbox Kambing">
                     <h3>Mee Rebus Gearbox Kambing</h3>
                     <span class="rating">⭐ 4.8</span>
                 </div>
-                
+
                 <div class="popular-item">
-                    <img src="{{ asset('assets/images/Popular menu/Roti Sarang Burung Daging.jpeg') }}" alt="Roti Sarang Burung Daging">
+                    <img src="{{ asset('assets/images/Popular menu/Roti Sarang Burung Daging.jpeg') }}"
+                        alt="Roti Sarang Burung Daging">
                     <h3>Roti Sarang Burung Daging</h3>
                     <span class="rating">⭐ 4.7</span>
                 </div>
-                
+
                 <div class="popular-item">
                     <img src="{{ asset('assets/images/Popular menu/Cendol.jpeg') }}" alt="Cendol">
                     <h3>Cendol</h3>
                     <span class="rating">⭐ 4.9</span>
                 </div>
-                
+
                 <div class="popular-item">
                     <img src="{{ asset('assets/images/Popular menu/Nasi Goreng Kampung.jpeg') }}" alt="Nasi Goreng Kampung">
                     <h3>Nasi Goreng Kampung</h3>
@@ -136,18 +141,30 @@
             </div>
             <div class="slider-container">
                 <div class="slider-wrapper" id="sliderWrapper">
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide1.jpeg') }}" alt="Gallery 1"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide2.jpeg') }}" alt="Gallery 2"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide3.jpeg') }}" alt="Gallery 3"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide4.jpeg') }}" alt="Gallery 4"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide5.jpeg') }}" alt="Gallery 5"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide6.jpeg') }}" alt="Gallery 6"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide7.jpeg') }}" alt="Gallery 7"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide8.jpeg') }}" alt="Gallery 8"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide9.jpeg') }}" alt="Gallery 9"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide10.jpeg') }}" alt="Gallery 10"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide11.jpeg') }}" alt="Gallery 11"></div>
-                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide12.jpeg') }}" alt="Gallery 12"></div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide1.jpeg') }}" alt="Gallery 1">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide2.jpeg') }}" alt="Gallery 2">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide3.jpeg') }}" alt="Gallery 3">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide4.jpeg') }}" alt="Gallery 4">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide5.jpeg') }}" alt="Gallery 5">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide6.jpeg') }}" alt="Gallery 6">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide7.jpeg') }}" alt="Gallery 7">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide8.jpeg') }}" alt="Gallery 8">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide9.jpeg') }}" alt="Gallery 9">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide10.jpeg') }}" alt="Gallery 10">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide11.jpeg') }}" alt="Gallery 11">
+                    </div>
+                    <div class="slider-slide"><img src="{{ asset('assets/images/Slider/Slide12.jpeg') }}" alt="Gallery 12">
+                    </div>
                 </div>
                 <button class="slider-arrow slider-arrow-left" id="sliderArrowLeft">
                     <i class="fas fa-chevron-left"></i>

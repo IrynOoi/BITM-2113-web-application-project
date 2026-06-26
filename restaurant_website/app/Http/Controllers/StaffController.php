@@ -1,5 +1,5 @@
 <?php
-
+// <!-- StaffController.php -->
 namespace App\Http\Controllers;
 
 use App\Models\MenuItem;
@@ -47,7 +47,7 @@ class StaffController extends Controller
             ->when($request->filled('status'), fn($q) => $q->where('status', $request->status))
             ->when($request->filled('type'), fn($q) => $q->where('order_type', $request->type))
             ->when($request->filled('search'), fn($q) => $q->where('id', 'like', "%{$request->search}%")
-                                                          ->orWhere('customer_name', 'like', "%{$request->search}%"))
+                ->orWhere('customer_name', 'like', "%{$request->search}%"))
             ->latest()
             ->get();
 
@@ -71,9 +71,9 @@ class StaffController extends Controller
     {
         $this->authorizeStaff();
 
-        $menuItems = MenuItem::when($request->filled('search'), function($q) use ($request) {
+        $menuItems = MenuItem::when($request->filled('search'), function ($q) use ($request) {
             $q->where('name', 'like', "%{$request->search}%")
-              ->orWhere('category', 'like', "%{$request->search}%");
+                ->orWhere('category', 'like', "%{$request->search}%");
         })->latest()->get();
 
         return view('staff.manage-menu', compact('menuItems'));
@@ -124,7 +124,7 @@ class StaffController extends Controller
     public function toggleMenuAvailability(MenuItem $menuItem): RedirectResponse
     {
         $this->authorizeStaff();
-        
+
         $menuItem->update(['is_available' => !$menuItem->is_available]);
 
         return back()->with('success', 'Menu item availability toggled.');
@@ -133,7 +133,7 @@ class StaffController extends Controller
     public function destroyMenuItem(MenuItem $menuItem): RedirectResponse
     {
         $this->authorizeStaff();
-        
+
         // Alternatively, soft delete or just set is_available = false
         $menuItem->delete();
 
@@ -145,17 +145,17 @@ class StaffController extends Controller
         $this->authorizeStaff();
 
         $tables = Table::orderBy('table_number')->get();
+        $existingNumbers = $tables->pluck('table_number')->toArray(); // e.g. [1,3,5]
 
-        return view('staff.manage-tables', compact('tables'));
+        return view('staff.manage-tables', compact('tables', 'existingNumbers'));
     }
-
     public function storeTable(Request $request): RedirectResponse
     {
         $this->authorizeStaff();
 
         $validated = $request->validate([
-            'table_number' => ['required', 'integer', 'min:1', 'unique:tables,table_number'],
-            'capacity' => ['required', 'integer', 'min:1'],
+            'table_number' => ['required', 'integer', 'min:1', 'max:30', 'unique:tables,table_number'],
+            'capacity' => ['required', 'integer', 'min:1', 'max:10'],
         ]);
 
         Table::create($validated);
@@ -166,7 +166,7 @@ class StaffController extends Controller
     public function destroyTable(Table $table): RedirectResponse
     {
         $this->authorizeStaff();
-        
+
         $table->delete();
 
         return back()->with('success', 'Table deleted successfully.');
@@ -179,6 +179,26 @@ class StaffController extends Controller
         $users = User::latest()->get();
 
         return view('staff.manage-users', compact('users'));
+    }
+
+    public function storeUser(Request $request): RedirectResponse
+    {
+        $this->authorizeStaff();
+
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'role' => ['required', 'in:customer,staff,admin'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        $validated['is_active'] = true;
+
+        User::create($validated);
+
+        return back()->with('success', 'User created successfully.');
     }
 
     public function toggleUserStatus(User $user): RedirectResponse

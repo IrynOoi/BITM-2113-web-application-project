@@ -1,3 +1,4 @@
+/* cart.css */
 /* ========================================
    CART PAGE STYLES
    ======================================== */
@@ -392,7 +393,7 @@
     display: block;
 }
 
-.order-type-option input:checked + .option-content {
+.order-type-option input:checked+.option-content {
     border-color: var(--primary);
     background-color: rgba(255, 140, 0, 0.05);
 }
@@ -484,7 +485,7 @@
     .cart-layout {
         grid-template-columns: 1fr;
     }
-    
+
     .cart-summary-section {
         position: static;
     }
@@ -494,22 +495,22 @@
     .cart-page-header h1 {
         font-size: 1.4rem;
     }
-    
+
     .cart-item-image {
         width: 70px;
         height: 70px;
     }
-    
+
     .cart-item-name {
         font-size: 0.9rem;
     }
-    
+
     .quantity-btn {
         width: 30px;
         height: 30px;
         font-size: 0.9rem;
     }
-    
+
     .quantity-value {
         width: 32px;
         font-size: 0.85rem;

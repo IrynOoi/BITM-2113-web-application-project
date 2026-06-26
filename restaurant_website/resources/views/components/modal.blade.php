@@ -1,3 +1,4 @@
+<!-- modal.blade.php -->
 @props([
     'name',
     'show' => false,

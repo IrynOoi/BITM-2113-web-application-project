@@ -1,5 +1,5 @@
 <?php
-
+// <!-- LegacyDataSeeder.php -->
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;

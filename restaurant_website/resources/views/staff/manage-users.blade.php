@@ -5,7 +5,7 @@
 @section('content')
 <div class="staff-header">
     <h1>Manage Users</h1>
-    <button class="btn-add"><i class="fas fa-plus"></i> Add User</button>
+    <button class="btn-add" onclick="document.getElementById('addUserModal').style.display='flex'"><i class="fas fa-plus"></i> Add User</button>
 </div>
 
 <div class="table-responsive">
@@ -48,5 +48,47 @@
             @endforelse
         </tbody>
     </table>
+</div>
+
+<div class="modal-overlay" id="addUserModal" style="display: none;">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h2>Add New User</h2>
+            <button class="modal-close" onclick="document.getElementById('addUserModal').style.display='none'"><i class="fas fa-times"></i></button>
+        </div>
+        <form method="POST" action="{{ route('staff.users.store') }}">
+            @csrf
+            <div class="modal-body">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Full Name</label>
+                    <input type="text" name="full_name" class="filter-input" style="width: 100%; margin-top:5px;" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Email</label>
+                    <input type="email" name="email" class="filter-input" style="width: 100%; margin-top:5px;" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Role</label>
+                    <select name="role" class="filter-input" style="width: 100%; margin-top:5px;" required>
+                        <option value="customer">Customer</option>
+                        <option value="staff">Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Password</label>
+                    <input type="password" name="password" class="filter-input" style="width: 100%; margin-top:5px;" required minlength="8">
+                </div>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Confirm Password</label>
+                    <input type="password" name="password_confirmation" class="filter-input" style="width: 100%; margin-top:5px;" required minlength="8">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="document.getElementById('addUserModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn-add">Add User</button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

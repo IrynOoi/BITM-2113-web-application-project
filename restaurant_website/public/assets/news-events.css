@@ -1,3 +1,4 @@
+/* news-events.css */
 /* ========================================
    NEWS & EVENTS PAGE STYLES
    ======================================== */
@@ -270,16 +271,16 @@
     .featured-event {
         grid-template-columns: 1fr;
     }
-    
+
     .featured-event-image {
         height: 220px;
         min-height: auto;
     }
-    
+
     .news-page-header h1 {
         font-size: 1.8rem;
     }
-    
+
     .news-grid {
         grid-template-columns: 1fr;
     }
@@ -289,7 +290,7 @@
     .news-page-header h1 {
         font-size: 1.5rem;
     }
-    
+
     .featured-event-content h2 {
         font-size: 1.2rem;
     }

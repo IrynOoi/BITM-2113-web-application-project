@@ -1,3 +1,4 @@
+//api.js
 // ========================================
 // API HELPER - Backend Connection
 // ========================================
@@ -8,7 +9,7 @@ const api = {
     // Get menu items
     async getMenu(category = '') {
         try {
-            const url = category 
+            const url = category
                 ? `${API_BASE}/api/menu?category=${category}`
                 : `${API_BASE}/api/menu`;
             const response = await fetch(url);
@@ -18,7 +19,7 @@ const api = {
             return [];
         }
     },
-    
+
     // Place an order
     async placeOrder(orderData) {
         try {
@@ -33,7 +34,7 @@ const api = {
             return { success: false, message: 'Network error' };
         }
     },
-    
+
     // Get order status
     async getOrderStatus(orderId) {
         try {
