@@ -41,6 +41,12 @@
                     class="nav-item {{ request()->routeIs('staff.users') ? 'active' : '' }}">
                     <i class="fas fa-users"></i> Manage Users
                 </a>
+                @if(auth()->user()->role === 'admin')
+                <a href="{{ route('staff.reports') }}"
+                    class="nav-item {{ request()->routeIs('staff.reports') ? 'active' : '' }}">
+                    <i class="fas fa-chart-line"></i> Reports
+                </a>
+                @endif
             </nav>
 
             <div class="sidebar-footer">

@@ -23,7 +23,8 @@ class PageController extends Controller
 
     public function menu()
     {
-        return view('menu');
+        $menuItems = \App\Models\MenuItem::where('is_available', 1)->get();
+        return view('menu', compact('menuItems'));
     }
 
     public function newsEvents()

@@ -375,7 +375,7 @@
                 <a href="{{ route('customer.cart') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Cart</a>
             </div>
 
-            <form class="checkout-layout" id="checkoutForm" method="POST" action="{{ route('customer.orders.store') }}">
+            <form class="checkout-layout" id="checkoutForm" method="POST" action="{{ route('customer.orders.store') }}" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="cartData" id="cartData">
                 <input type="hidden" name="paymentMethod" id="paymentMethodHidden" value="cash">
@@ -387,6 +387,10 @@
                             <div class="form-group">
                                 <label>Order Type <span class="required">*</span></label>
                                 <div class="order-type-toggle">
+                                    <label class="order-type-btn">
+                                        <input type="radio" name="orderType" value="dine-in" id="typeDineIn">
+                                        <span><i class="fas fa-utensils"></i> Dine In</span>
+                                    </label>
                                     <label class="order-type-btn">
                                         <input type="radio" name="orderType" value="takeaway" id="typeTakeaway">
                                         <span><i class="fas fa-shopping-bag"></i> Takeaway</span>
@@ -404,15 +408,15 @@
                                     <div class="input-wrapper">
                                         <i class="fas fa-user"></i>
                                         <input type="text" id="custName" name="custName"
-                                            value="{{ old('custName', Auth::user()->full_name) }}" required>
+                                            value="{{ old('custName', Auth::check() ? Auth::user()->full_name : '') }}" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="custPhone">Phone Number <span class="required">*</span></label>
+                                    <label for="custPhone">Phone Number <span class="required" id="phoneRequiredAsterisk">*</span></label>
                                     <div class="input-wrapper">
                                         <i class="fas fa-phone"></i>
                                         <input type="tel" id="custPhone" name="custPhone"
-                                            value="{{ old('custPhone', Auth::user()->phone) }}" required>
+                                            value="{{ old('custPhone', Auth::check() ? Auth::user()->phone : '') }}" required>
                                     </div>
                                 </div>
                             </div>
@@ -422,16 +426,26 @@
                                 <div class="input-wrapper">
                                     <i class="fas fa-map-marker-alt"></i>
                                     <textarea id="address" name="address" rows="3"
-                                        placeholder="Enter your full delivery address">{{ old('address', Auth::user()->address) }}</textarea>
+                                        placeholder="Enter your full delivery address">{{ old('address', Auth::check() ? Auth::user()->address : '') }}</textarea>
                                 </div>
                             </div>
 
-                            <div class="form-group" id="tableSection" style="display:none;">
-                                <label for="tableNumber">Table Number <span class="required">*</span></label>
-                                <div class="input-wrapper">
-                                    <i class="fas fa-chair"></i>
-                                    <input type="number" id="tableNumber" name="tableNumber"
-                                        placeholder="Enter table number" min="1">
+                            <div class="form-row" id="tableSection" style="display:none;">
+                                <div class="form-group">
+                                    <label for="tableNumber">Table Number <span class="required">*</span></label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-chair"></i>
+                                        <input type="number" id="tableNumber" name="tableNumber"
+                                            placeholder="Table no." min="1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paxNumber">Number of Pax <span class="required">*</span></label>
+                                    <div class="input-wrapper">
+                                        <i class="fas fa-users"></i>
+                                        <input type="number" id="paxNumber" name="paxNumber"
+                                            placeholder="Pax" min="1">
+                                    </div>
                                 </div>
                             </div>
 
@@ -465,6 +479,17 @@
                                             requested</small></div>
                                 </span>
                             </label>
+                            
+                            <div id="receiptUploadSection" style="display:none; margin-top: 15px; padding: 15px; background: #fdf0ef; border-radius: 12px; border: 1px dashed #c0392b;">
+                                <div class="form-group">
+                                    <label for="receipt">Upload Payment Receipt <span class="required">*</span></label>
+                                    <div class="input-wrapper" style="margin-top: 8px;">
+                                        <i class="fas fa-file-upload"></i>
+                                        <input type="file" id="receipt" name="receipt" accept="image/jpeg,image/png,application/pdf" style="padding: 8px 14px 8px 40px; background: #fff;">
+                                    </div>
+                                    <small style="color: #666; font-size: 0.8rem; margin-top: 6px;">Max 5MB. Accepted formats: JPG, PNG, PDF.</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -499,6 +524,59 @@
             loadCheckoutSummary();
             setupOrderTypeToggle();
             setupPaymentToggle();
+            
+            // Check for URL parameters from QR order redirect
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('type')) {
+                const type = urlParams.get('type');
+                const radio = document.querySelector(`input[name="orderType"][value="${type}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    // Manually trigger the change event to update the UI
+                    radio.dispatchEvent(new Event('change'));
+                }
+            }
+            if (urlParams.has('table')) {
+                document.getElementById('tableNumber').value = urlParams.get('table');
+            }
+            if (urlParams.has('pax')) {
+                document.getElementById('paxNumber').value = urlParams.get('pax');
+            }
+            if (urlParams.has('notes')) {
+                document.getElementById('notes').value = urlParams.get('notes');
+            }
+            if (urlParams.has('qr')) {
+                const deliveryRadio = document.getElementById('typeDelivery');
+                if (deliveryRadio) {
+                    const deliveryLabel = deliveryRadio.closest('.order-type-btn');
+                    if (deliveryLabel) deliveryLabel.style.display = 'none';
+                }
+            }
+
+            const updateGuestName = () => {
+                const typeDineIn = document.getElementById('typeDineIn');
+                if (typeDineIn && typeDineIn.checked) {
+                    const tableNo = document.getElementById('tableNumber').value;
+                    const custNameInput = document.getElementById('custName');
+                    const currentVal = custNameInput.value.trim();
+                    
+                    if (currentVal === '' || currentVal === 'Guest' || currentVal.startsWith('Guest (Table')) {
+                        if (tableNo) {
+                            custNameInput.value = 'Guest (Table ' + tableNo + ')';
+                        } else {
+                            custNameInput.value = 'Guest';
+                        }
+                    }
+                }
+            };
+
+            document.getElementById('tableNumber').addEventListener('input', updateGuestName);
+            document.querySelectorAll('input[name="orderType"]').forEach(radio => {
+                radio.addEventListener('change', updateGuestName);
+            });
+            
+            // Run once on load to handle pre-filled data
+            updateGuestName();
 
             document.getElementById('checkoutForm').addEventListener('submit', function (event) {
                 const cart = JSON.parse(localStorage.getItem('restaurantCart') || '[]');
@@ -541,9 +619,23 @@
         function setupOrderTypeToggle() {
             document.querySelectorAll('input[name="orderType"]').forEach(radio => {
                 radio.addEventListener('change', function () {
-                    document.getElementById('addressSection').style.display = this.value === 'delivery' ? 'block' : 'none';
-                    document.getElementById('tableSection').style.display = this.value === 'dine-in' ? 'block' : 'none';
-                    document.getElementById('deliveryFeeRow').style.display = this.value === 'delivery' ? 'flex' : 'none';
+                    const isDelivery = this.value === 'delivery';
+                    const isDineIn = this.value === 'dine-in';
+                    
+                    document.getElementById('addressSection').style.display = isDelivery ? 'block' : 'none';
+                    document.getElementById('tableSection').style.display = isDineIn ? 'block' : 'none';
+                    document.getElementById('deliveryFeeRow').style.display = isDelivery ? 'flex' : 'none';
+                    
+                    const phoneAsterisk = document.getElementById('phoneRequiredAsterisk');
+                    const custPhone = document.getElementById('custPhone');
+                    if (isDineIn) {
+                        if (phoneAsterisk) phoneAsterisk.style.display = 'none';
+                        if (custPhone) custPhone.required = false;
+                    } else {
+                        if (phoneAsterisk) phoneAsterisk.style.display = 'inline';
+                        if (custPhone) custPhone.required = true;
+                    }
+                    
                     loadCheckoutSummary();
                 });
             });
@@ -553,6 +645,17 @@
             document.querySelectorAll('input[name="paymentMethodUi"]').forEach(radio => {
                 radio.addEventListener('change', function () {
                     document.getElementById('paymentMethodHidden').value = this.value;
+                    const receiptSection = document.getElementById('receiptUploadSection');
+                    const receiptInput = document.getElementById('receipt');
+                    
+                    if (this.value === 'online_transfer') {
+                        receiptSection.style.display = 'block';
+                        receiptInput.required = true;
+                    } else {
+                        receiptSection.style.display = 'none';
+                        receiptInput.required = false;
+                        receiptInput.value = ''; // clear input
+                    }
                 });
             });
         }

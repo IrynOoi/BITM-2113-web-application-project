@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
     name        VARCHAR(150) NOT NULL,
     description TEXT,
     price       DECIMAL(8,2) NOT NULL,
-    category    ENUM('main','drinks','dessert','snacks','soup') NOT NULL,
+    category    VARCHAR(50) NOT NULL,
     image_path  VARCHAR(255),
     is_available TINYINT(1) NOT NULL DEFAULT 1,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

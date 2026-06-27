@@ -198,6 +198,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (tbl >= 1 && tbl <= MAX_TABLE) {
             currentTable = tbl;
             document.getElementById('tableValue').textContent = currentTable;
+            
+            // Hide the table scroller since it's already selected via QR
+            const tableScrollerGroup = document.getElementById('tableScrollerGroup');
+            if (tableScrollerGroup) {
+                tableScrollerGroup.style.display = 'none';
+            }
         }
     }
 
@@ -505,30 +511,16 @@ function initPlaceOrder() {
 
     btnConfirm.addEventListener('click', () => {
         const notes = document.getElementById('specialInstructions').value;
-        const custName = "Guest (Table " + currentTable + ")";
         
-        const form = document.getElementById('qrSubmitForm');
-        if (form) {
-            document.getElementById('hiddenCustName').value = custName;
-            document.getElementById('hiddenCustPhone').value = "-";
-            document.getElementById('hiddenTableNumber').value = currentTable;
-            document.getElementById('hiddenNotes').value = notes;
-            document.getElementById('hiddenCartData').value = JSON.stringify(currentOrder);
-            
-            // clear cart and UI before submitting
-            btnConfirm.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            btnConfirm.disabled = true;
-            localStorage.removeItem('restaurantCart'); 
-            form.submit();
-        } else {
-            modal.style.display = 'none';
-            successModal.style.display = 'flex';
-            document.getElementById('successOrderId').textContent = '#' + Math.floor(Math.random() * 9000 + 1000);
-            currentOrder = [];
-            renderMenu(menuItems);
-            updateOrderSummary();
-            document.getElementById('orderItemsPanel').style.display = 'none';
-        }
+        // Save the current order to localStorage for the checkout page
+        localStorage.setItem('restaurantCart', JSON.stringify(currentOrder));
+        
+        btnConfirm.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Redirecting to Checkout...';
+        btnConfirm.disabled = true;
+        
+        // Redirect to checkout with table, pax, and notes in query string
+        const checkoutUrl = '/customer/checkout?type=dine-in&table=' + currentTable + '&pax=' + currentPax + '&notes=' + encodeURIComponent(notes) + '&qr=1';
+        window.location.href = checkoutUrl;
     });
 
     document.getElementById('btnCloseSuccess').addEventListener('click', () => successModal.style.display = 'none');

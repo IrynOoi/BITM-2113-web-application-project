@@ -18,13 +18,23 @@
                 <p>Please select your table and number of guests</p>
             </div>
             <div class="scrollers-container">
-                <div class="scroller-group">
+                <div class="scroller-group" id="tableScrollerGroup">
                     <label>Table Number</label>
                     <div class="scroller-wrapper">
                         <button class="scroller-btn scroller-up" data-target="table"><i
                                 class="fas fa-chevron-up"></i></button>
                         <div class="scroller-display"><span class="scroller-value" id="tableValue">1</span></div>
                         <button class="scroller-btn scroller-down" data-target="table"><i
+                                class="fas fa-chevron-down"></i></button>
+                    </div>
+                </div>
+                <div class="scroller-group" id="paxScrollerGroup">
+                    <label>Number of Pax</label>
+                    <div class="scroller-wrapper">
+                        <button class="scroller-btn scroller-up" data-target="pax"><i
+                                class="fas fa-chevron-up"></i></button>
+                        <div class="scroller-display"><span class="scroller-value" id="paxValue">1</span></div>
+                        <button class="scroller-btn scroller-down" data-target="pax"><i
                                 class="fas fa-chevron-down"></i></button>
                     </div>
                 </div>

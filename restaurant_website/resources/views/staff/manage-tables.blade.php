@@ -8,10 +8,25 @@
     <form method="POST" action="{{ route('staff.tables.store') }}" style="display:flex; gap:10px; align-items:center;">
         @csrf
         <input type="number" name="table_number" placeholder="Table Number" required min="1" max="30" class="filter-input" style="width: 150px;">
-        <input type="number" name="capacity" placeholder="Capacity (Pax)" required min="1" max="10" class="filter-input" style="width: 150px;" value="4">
         <button type="submit" class="btn-add"><i class="fas fa-plus"></i> Add Table</button>
     </form>
 </div>
+
+@if ($errors->any())
+    <div class="alert alert-danger" style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 8px; margin-bottom: 15px; border: 1px solid #f87171;">
+        <ul style="margin: 0; padding-left: 20px;">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if(session('success'))
+    <div class="alert alert-success" style="background-color: #dcfce7; color: #15803d; padding: 1rem; border-radius: 8px; margin-bottom: 15px; border: 1px solid #86efac;">
+        {{ session('success') }}
+    </div>
+@endif
 
 <div class="tables-grid">
     @php
@@ -48,10 +63,10 @@
             <span class="table-num">Table {{ $table->table_number }}</span>
             <span class="table-status">{{ $isOccupied ? 'Occupied' : 'Available' }}</span>
             @if($isOccupied)
-                <small>{{ $table->capacity }} pax - RM {{ number_format($activeOrder->total, 2) }}</small>
+                <small>RM {{ number_format($activeOrder->total, 2) }}</small>
             @endif
             <div style="display:flex; gap:5px; margin-top:10px;">
-                <button class="btn-table-action" onclick="viewTable({{ $table->table_number }}, '{{ $qrUrl }}', {{ $isOccupied ? 'true' : 'false' }}, '{{ $activeOrder ? '#'.$activeOrder->id : '-' }}', '{{ $table->capacity }} pax', '{{ $activeOrder ? 'RM '.number_format($activeOrder->total, 2) : '-' }}')" style="flex:1;">View</button>
+                <button class="btn-table-action" onclick="viewTable({{ $table->table_number }}, '{{ $qrUrl }}', {{ $isOccupied ? 'true' : 'false' }}, '{{ $activeOrder ? '#'.$activeOrder->id : '-' }}', '{{ $activeOrder ? 'RM '.number_format($activeOrder->total, 2) : '-' }}')" style="flex:1;">View</button>
                 <form method="POST" action="{{ route('staff.tables.destroy', $table->id) }}" onsubmit="return confirm('Are you sure you want to delete Table {{ $table->table_number }}?');">
                     @csrf
                     @method('DELETE')
@@ -80,7 +95,6 @@
             <div class="table-detail-info">
                 <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" id="modalStatus">Available</span></div>
                 <div class="detail-row"><span class="detail-label">Current Order</span><span class="detail-value" id="modalOrder">-</span></div>
-                <div class="detail-row"><span class="detail-label">Pax</span><span class="detail-value" id="modalPax">-</span></div>
                 <div class="detail-row"><span class="detail-label">Total</span><span class="detail-value" id="modalTotal">-</span></div>
             </div>
         </div>
@@ -91,7 +105,7 @@
 
 @section('scripts')
 <script>
-    function viewTable(tableNum, qrUrl, isOccupied, orderId, pax, total) {
+    function viewTable(tableNum, qrUrl, isOccupied, orderId, total) {
         const modal = document.getElementById('tableModal');
         document.getElementById('modalTableTitle').textContent = 'Table ' + tableNum;
         const qrImg = document.getElementById('modalQrImage');
@@ -100,12 +114,10 @@
         if (isOccupied) {
             document.getElementById('modalStatus').innerHTML = '<span class="status-badge preparing">Occupied</span>';
             document.getElementById('modalOrder').textContent = orderId;
-            document.getElementById('modalPax').textContent = pax;
             document.getElementById('modalTotal').textContent = total;
         } else {
             document.getElementById('modalStatus').innerHTML = '<span class="status-badge available">Available</span>';
             document.getElementById('modalOrder').textContent = '-';
-            document.getElementById('modalPax').textContent = pax;
             document.getElementById('modalTotal').textContent = '-';
         }
         modal.style.display = 'flex';

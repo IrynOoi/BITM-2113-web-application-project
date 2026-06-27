@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 
 class StaffController extends Controller
 {
@@ -87,7 +89,7 @@ class StaffController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'category' => ['required', 'in:main,drinks,dessert,snacks,soup'],
+            'category' => ['required', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
@@ -108,7 +110,7 @@ class StaffController extends Controller
             'name' => ['required', 'string', 'max:150'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'category' => ['required', 'in:main,drinks,dessert,snacks,soup'],
+            'category' => ['required', 'string', 'max:50'],
             'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
@@ -155,8 +157,8 @@ class StaffController extends Controller
 
         $validated = $request->validate([
             'table_number' => ['required', 'integer', 'min:1', 'max:30', 'unique:tables,table_number'],
-            'capacity' => ['required', 'integer', 'min:1', 'max:10'],
         ]);
+        $validated['capacity'] = 4;
 
         Table::create($validated);
 
@@ -193,17 +195,85 @@ class StaffController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
+        // If current user is staff, only allow creating customer accounts
+        if (Auth::user()->role === 'staff') {
+            $validated['role'] = 'customer';
+        }
+
+        $validated['password'] = Hash::make($validated['password']);
         $validated['is_active'] = true;
+        $validated['phone'] = $validated['phone'] ?? '';
 
         User::create($validated);
 
         return back()->with('success', 'User created successfully.');
     }
 
+    public function updateUser(Request $request, User $user): RedirectResponse
+    {
+        $this->authorizeStaff();
+
+        // Staff can only manage customer accounts
+        if (Auth::user()->role === 'staff') {
+            if ($user->role !== 'customer') {
+                return back()->with('error', 'You are only authorized to manage customer accounts.');
+            }
+            // Ensure the role is not changed to something else
+            if ($request->input('role') !== 'customer') {
+                return back()->with('error', 'You cannot change the role of a customer.');
+            }
+        }
+
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:100'],
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'role' => ['required', 'in:customer,staff,admin'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Force role for staff (safety)
+        if (Auth::user()->role === 'staff') {
+            $validated['role'] = 'customer';
+        }
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $validated['phone'] = $validated['phone'] ?? '';
+
+        $user->update($validated);
+
+        return back()->with('success', 'User updated successfully.');
+    }
+
+    public function destroyUser(User $user): RedirectResponse
+    {
+        $this->authorizeStaff();
+
+        if (Auth::user()->role === 'staff' && $user->role !== 'customer') {
+            return back()->with('error', 'You are only authorized to manage customer accounts.');
+        }
+
+        if ($user->id === Auth::id()) {
+            return back()->with('error', 'You cannot delete your own account.');
+        }
+
+        $user->delete();
+
+        return back()->with('success', 'User deleted successfully.');
+    }
+
     public function toggleUserStatus(User $user): RedirectResponse
     {
         $this->authorizeStaff();
+
+        if (Auth::user()->role === 'staff' && $user->role !== 'customer') {
+            return back()->with('error', 'You are only authorized to manage customer accounts.');
+        }
 
         // Prevent admins from deactivating themselves
         if ($user->id === Auth::id()) {
@@ -222,8 +292,61 @@ class StaffController extends Controller
         $dailyOrders = Order::whereDate('created_at', today())->count();
         $dailyRevenue = Order::whereDate('created_at', today())->sum('total');
 
-        $weeklyOrders = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
-        $weeklyRevenue = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum('total');
+        $monthlyOrders = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count();
+        $monthlyRevenue = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
+
+        // Daily Revenue (Last 7 Days)
+        $dailyLabels = [];
+        $dailyData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $dailyLabels[] = $date->format('M d');
+            $dailyData[] = Order::whereDate('created_at', $date)->sum('total');
+        }
+
+        // Monthly Revenue (Current Year)
+        $monthlyLabels = [];
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $month = Carbon::create(date('Y'), $i, 1);
+            $monthlyLabels[] = $month->format('M');
+            $monthlyData[] = Order::whereYear('created_at', date('Y'))
+                                  ->whereMonth('created_at', $i)
+                                  ->sum('total');
+        }
+
+        $dailyChartConfig = [
+            'type' => 'bar',
+            'data' => [
+                'labels' => $dailyLabels,
+                'datasets' => [[
+                    'label' => 'Daily Revenue (RM)',
+                    'data' => $dailyData,
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.8)'
+                ]]
+            ],
+            'options' => [
+                'title' => ['display' => true, 'text' => 'Daily Revenue - Last 7 Days']
+            ]
+        ];
+        
+        $monthlyChartConfig = [
+            'type' => 'bar',
+            'data' => [
+                'labels' => $monthlyLabels,
+                'datasets' => [[
+                    'label' => 'Monthly Revenue (RM)',
+                    'data' => $monthlyData,
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.8)'
+                ]]
+            ],
+            'options' => [
+                'title' => ['display' => true, 'text' => 'Monthly Revenue - ' . date('Y')]
+            ]
+        ];
+
+        $dailyChartUrl = 'https://quickchart.io/chart?w=800&h=400&c=' . urlencode(json_encode($dailyChartConfig));
+        $monthlyChartUrl = 'https://quickchart.io/chart?w=800&h=400&c=' . urlencode(json_encode($monthlyChartConfig));
 
         $topItems = DB::table('order_items')
             ->select('menu_item_id', 'item_name', DB::raw('SUM(quantity) as total_quantity'))
@@ -232,6 +355,83 @@ class StaffController extends Controller
             ->limit(5)
             ->get();
 
-        return view('staff.reports', compact('dailyOrders', 'dailyRevenue', 'weeklyOrders', 'weeklyRevenue', 'topItems'));
+        return view('staff.reports', compact(
+            'dailyOrders', 'dailyRevenue', 'monthlyOrders', 'monthlyRevenue', 'topItems', 'dailyChartUrl', 'monthlyChartUrl'
+        ));
+    }
+
+    public function exportReport()
+    {
+        $this->authorizeStaff();
+
+        $dailyOrders = Order::whereDate('created_at', today())->count();
+        $dailyRevenue = Order::whereDate('created_at', today())->sum('total');
+
+        $weeklyOrders = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
+        $weeklyRevenue = Order::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->sum('total');
+
+        // Daily Revenue (Last 7 Days)
+        $dailyLabels = [];
+        $dailyData = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::today()->subDays($i);
+            $dailyLabels[] = $date->format('M d');
+            $dailyData[] = Order::whereDate('created_at', $date)->sum('total');
+        }
+
+        // Monthly Revenue (Current Year)
+        $monthlyLabels = [];
+        $monthlyData = [];
+        for ($i = 1; $i <= 12; $i++) {
+            $month = Carbon::create(date('Y'), $i, 1);
+            $monthlyLabels[] = $month->format('M');
+            $monthlyData[] = Order::whereYear('created_at', date('Y'))
+                                  ->whereMonth('created_at', $i)
+                                  ->sum('total');
+        }
+
+        // Generate QuickChart URLs
+        $dailyChartConfig = [
+            'type' => 'bar',
+            'data' => [
+                'labels' => $dailyLabels,
+                'datasets' => [[
+                    'label' => 'Daily Revenue (RM)',
+                    'data' => $dailyData,
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.8)'
+                ]]
+            ],
+            'options' => [
+                'title' => ['display' => true, 'text' => 'Daily Revenue - Last 7 Days']
+            ]
+        ];
+        
+        $monthlyChartConfig = [
+            'type' => 'bar',
+            'data' => [
+                'labels' => $monthlyLabels,
+                'datasets' => [[
+                    'label' => 'Monthly Revenue (RM)',
+                    'data' => $monthlyData,
+                    'backgroundColor' => 'rgba(75, 192, 192, 0.8)'
+                ]]
+            ],
+            'options' => [
+                'title' => ['display' => true, 'text' => 'Monthly Revenue - ' . date('Y')]
+            ]
+        ];
+
+        $dailyChartUrl = 'https://quickchart.io/chart?w=600&h=300&c=' . urlencode(json_encode($dailyChartConfig));
+        $monthlyChartUrl = 'https://quickchart.io/chart?w=600&h=300&c=' . urlencode(json_encode($monthlyChartConfig));
+
+        $pdf = Pdf::loadView('staff.reports-pdf', compact(
+            'dailyOrders', 'dailyRevenue', 'weeklyOrders', 'weeklyRevenue',
+            'dailyChartUrl', 'monthlyChartUrl'
+        ));
+
+        // Enable remote images for dompdf to load quickchart images
+        $pdf->setOption(['isRemoteEnabled' => true]);
+
+        return $pdf->download('sales_report_' . date('Y-m-d') . '.pdf');
     }
 }

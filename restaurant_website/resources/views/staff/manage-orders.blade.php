@@ -43,7 +43,12 @@
                 <tr data-type="{{ $order->order_type }}">
                     <td>#{{ $order->id }}</td>
                     <td>{{ ucfirst($order->order_type) }}</td>
-                    <td>{{ $order->table_number ? 'Table '.$order->table_number : '-' }}</td>
+                    <td>
+                        {{ $order->table_number ? 'Table '.$order->table_number : '-' }}
+                        @if($order->pax)
+                            <br><small style="color: #666;">({{ $order->pax }} pax)</small>
+                        @endif
+                    </td>
                     <td>{{ $order->items_count }} item(s)</td>
                     <td>RM {{ number_format($order->total, 2) }}</td>
                     <td>{{ optional($order->created_at)->format('h:i A') ?? '-' }}</td>

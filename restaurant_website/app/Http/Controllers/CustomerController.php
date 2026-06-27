@@ -94,13 +94,14 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'custName' => ['required', 'string', 'max:100'],
-            'custPhone' => ['required', 'string', 'max:20'],
+            'custPhone' => [Rule::requiredIf(fn() => $request->orderType !== 'dine-in'), 'nullable', 'string', 'max:20'],
             'orderType' => ['required', Rule::in(['dine-in', 'takeaway', 'delivery'])],
             'tableNumber' => ['nullable', 'integer', 'min:1'],
+            'paxNumber' => ['nullable', 'integer', 'min:1'],
             'address' => ['nullable', 'string', 'max:500'],
             'notes' => ['nullable', 'string', 'max:500'],
             'paymentMethod' => ['nullable', Rule::in(['cash', 'online_transfer'])],
-            'receipt' => ['nullable', 'file', 'mimes:jpeg,png,pdf', 'max:5120'],
+            'receipt' => ['nullable', 'file', 'mimetypes:image/jpeg,image/png,application/pdf', 'max:5120'],
             'cartData' => ['required', 'json'],
         ]);
 
@@ -116,22 +117,18 @@ class CustomerController extends Controller
         $deliveryFee = $validated['orderType'] === 'delivery' ? 3.00 : 0.00;
         $total = $subtotal + $tax + $deliveryFee;
 
-        $receiptPath = null;
-        if ($request->hasFile('receipt')) {
-            $receiptPath = $request->file('receipt')->store('receipts', 'public');
-        }
-
-        $order = DB::transaction(function () use ($validated, $cartItems, $subtotal, $tax, $deliveryFee, $total, $receiptPath) {
+        $order = DB::transaction(function () use ($validated, $cartItems, $subtotal, $tax, $deliveryFee, $total, $request) {
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'customer_name' => $validated['custName'],
-                'customer_phone' => $validated['custPhone'],
+                'customer_phone' => $validated['custPhone'] ?? '-',
                 'order_type' => $validated['orderType'],
                 'table_number' => $validated['tableNumber'] ?? null,
+                'pax' => $validated['paxNumber'] ?? null,
                 'delivery_address' => $validated['address'] ?? null,
                 'special_notes' => $validated['notes'] ?? null,
                 'payment_method' => $validated['paymentMethod'] ?? 'cash',
-                'receipt_path' => $receiptPath,
+                'receipt_path' => null,
                 'subtotal' => $subtotal,
                 'tax' => $tax,
                 'delivery_fee' => $deliveryFee,
@@ -149,6 +146,19 @@ class CustomerController extends Controller
                     'line_total' => (float) $item['price'] * (int) $item['quantity'],
                 ]);
             });
+
+            if ($request->hasFile('receipt')) {
+                $file = $request->file('receipt');
+                $timestamp = time();
+                $ext = $file->getClientOriginalExtension();
+                $filename = "{$order->id}_{$timestamp}.{$ext}";
+                
+                // Member 4: move_uploaded_file() into assets/uploads/receipts/{order_id}_{timestamp}.ext
+                $file->move(public_path('assets/uploads/receipts'), $filename);
+                
+                // Save relative path
+                $order->update(['receipt_path' => "assets/uploads/receipts/{$filename}"]);
+            }
 
             return $order;
         });

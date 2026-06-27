@@ -156,6 +156,24 @@
 @endsection
 
 @section('scripts')
+    @php
+        $menuDataArray = $menuItems->map(function($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'category' => $item->category,
+                'price' => (float)$item->price,
+                'image' => $item->image_path ? Storage::url($item->image_path) : null,
+                'description' => $item->description ?? '',
+                'badge' => '',
+                'rating' => 0,
+                'spicy' => false,
+            ];
+        });
+    @endphp
+    <script>
+        const menuData = @json($menuDataArray);
+    </script>
     <script src="{{ asset('assets/js/api.js') }}"></script>
     <script src="{{ asset('assets/js/menu.js') }}"></script>
 @endsection
