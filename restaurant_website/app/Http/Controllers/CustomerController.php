@@ -34,8 +34,22 @@ class CustomerController extends Controller
         return view('customer.checkout');
     }
 
-    public function qrOrder(): View
+    public function qrOrder(Request $request): View|RedirectResponse
     {
+        $tableNumber = $request->query('table');
+
+        if ($tableNumber) {
+            $activeOrder = Order::where('table_number', $tableNumber)
+                ->whereIn('status', ['pending', 'confirmed', 'preparing', 'ready'])
+                ->latest()
+                ->first();
+
+            if ($activeOrder) {
+                return redirect()->route('customer.order-status', ['order_id' => $activeOrder->id])
+                    ->with('info', 'This table already has an active order processing.');
+            }
+        }
+
         return view('customer.qr-order');
     }
 
