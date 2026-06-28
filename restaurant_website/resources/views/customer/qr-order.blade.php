@@ -173,6 +173,7 @@
 @section('scripts')
     <script>
         window.orderStatusUrl = @json(route('customer.order-status'));
+        window.dbMenuItems = @json($menuItems ?? []);
     </script>
     <script src="{{ asset('assets/js/qr-order.js') }}"></script>
 @endsection

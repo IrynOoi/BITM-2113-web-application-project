@@ -50,7 +50,9 @@ class CustomerController extends Controller
             }
         }
 
-        return view('customer.qr-order');
+        $menuItems = \App\Models\MenuItem::where('is_available', 1)->get();
+
+        return view('customer.qr-order', compact('menuItems'));
     }
 
     public function orderStatus(): View

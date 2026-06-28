@@ -4,7 +4,8 @@
 // QR ORDER PAGE JS — Restoran SUP TULANG ZZ
 // ========================================
 
-const menuItems = [
+let menuItems = [];
+const staticMenuItems = [
     // ── SIGNATURE: Sup ZZ ──
     { id: 1, name: "Sup Gearbox Kambing", category: "signature-sup", price: 19.00, image: "../../assets/images/food1.jpg", badge: "bestseller" },
     { id: 2, name: "Sup Kambing", category: "signature-sup", price: 20.00, image: "../../assets/images/food2.jpg", badge: "" },
@@ -170,6 +171,19 @@ const menuItems = [
     { id: 152, name: "Ais Jelly Limau", category: "drinks-dessert", price: 6.00, image: "../../assets/images/menu4.jpg", badge: "" },
     { id: 153, name: "Cendol", category: "drinks-dessert", price: 6.00, image: "../../assets/images/food1.jpg", badge: "bestseller" },
 ];
+
+if (window.dbMenuItems && window.dbMenuItems.length > 0) {
+    menuItems = window.dbMenuItems.map(dbItem => ({
+        id: dbItem.id,
+        name: dbItem.name,
+        category: dbItem.category,
+        price: parseFloat(dbItem.price),
+        image: dbItem.image_path ? `/storage/${dbItem.image_path}` : null,
+        badge: ""
+    }));
+} else {
+    menuItems = staticMenuItems;
+}
 
 let currentTable = 1;
 let currentPax = 1;
@@ -370,7 +384,7 @@ function renderMenu(items) {
         return `
             <div class="menu-item-card">
                 <div class="menu-item-image">
-                    <img src="${getMenuItemImage(item.id)}" onerror="this.src='${getFallbackImage()}'" alt="${item.name}">
+                    <img src="${item.image ? (item.image.startsWith('../../') ? item.image.replace('../../', '/') : item.image) : getMenuItemImage(item.id)}" onerror="this.src='${getFallbackImage()}'" alt="${item.name}">
                     ${item.badge ? `<span class="menu-item-badge badge-${item.badge}">${getBadge(item.badge)}</span>` : ''}
                 </div>
                 <div class="menu-item-body">

@@ -96,9 +96,11 @@
     <!-- Add Menu Modal -->
     <div class="modal-overlay" id="addMenuModal" style="display: none;">
         <div class="modal-card">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 style="margin: 0;">Add New Menu Item</h2>
-                <button type="button" class="modal-close" onclick="document.getElementById('addMenuModal').style.display='none'"><i
+                <button type="button" class="modal-close"
+                    onclick="document.getElementById('addMenuModal').style.display='none'"><i
                         class="fas fa-times"></i></button>
             </div>
             <form method="POST" action="{{ route('staff.menu.store') }}" enctype="multipart/form-data">
@@ -121,8 +123,8 @@
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Category</label>
                         <select name="category" class="filter-input" style="width: 100%; margin-top:5px;" required>
-                            <option value="signature-sup">Sup ZZ (Signature)</option>
-                            <option value="signature-mee">Mee Rebus ZZ (Signature)</option>
+                            <option value="signature-sup">Sup ZZ</option>
+                            <option value="signature-mee">Mee Rebus ZZ</option>
                             <option value="sarapan-panas">Sarapan Panas</option>
                             <option value="sarapan-roti">Roti Bakar</option>
                             <option value="roti-canai">Roti Canai</option>
@@ -162,9 +164,11 @@
     <!-- Edit Menu Modal -->
     <div class="modal-overlay" id="editMenuModal" style="display: none;">
         <div class="modal-card">
-            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2 style="margin: 0;">Edit Menu Item</h2>
-                <button type="button" class="modal-close" onclick="document.getElementById('editMenuModal').style.display='none'"><i
+                <button type="button" class="modal-close"
+                    onclick="document.getElementById('editMenuModal').style.display='none'"><i
                         class="fas fa-times"></i></button>
             </div>
             <form method="POST" id="editMenuForm" action="" enctype="multipart/form-data">
@@ -190,8 +194,8 @@
                         <label>Category</label>
                         <select name="category" id="edit_category" class="filter-input" style="width: 100%; margin-top:5px;"
                             required>
-                            <option value="signature-sup">Sup ZZ (Signature)</option>
-                            <option value="signature-mee">Mee Rebus ZZ (Signature)</option>
+                            <option value="signature-sup">Sup ZZ</option>
+                            <option value="signature-mee">Mee Rebus ZZ</option>
                             <option value="sarapan-panas">Sarapan Panas</option>
                             <option value="sarapan-roti">Roti Bakar</option>
                             <option value="roti-canai">Roti Canai</option>
@@ -216,8 +220,11 @@
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Current Image</label>
                         <div style="margin-top: 5px; margin-bottom: 10px;">
-                            <img id="edit_image_preview" src="" style="width:100px; height:100px; object-fit:cover; border-radius:4px; display:none;" alt="Current Image">
-                            <p id="edit_no_image_text" style="color:#666; font-size:0.9em; display:none;">No image found (Fallback is missing)</p>
+                            <img id="edit_image_preview" src=""
+                                style="width:100px; height:100px; object-fit:cover; border-radius:4px; display:none;"
+                                alt="Current Image">
+                            <p id="edit_no_image_text" style="color:#666; font-size:0.9em; display:none;">No image found
+                                (Fallback is missing)</p>
                         </div>
                         <label>Upload New Image (Leave blank to keep current)</label>
                         <input type="file" name="image" class="filter-input" accept="image/*"
@@ -245,21 +252,21 @@
 
             const imgPreview = document.getElementById('edit_image_preview');
             const noImgText = document.getElementById('edit_no_image_text');
-            
+
             if (item.image_path) {
                 imgPreview.src = `/storage/${item.image_path}`;
             } else {
                 imgPreview.src = `/assets/images/menu-image/item${item.id}.png`;
             }
-            
+
             imgPreview.style.display = 'block';
             noImgText.style.display = 'none';
 
-            imgPreview.onerror = function() {
+            imgPreview.onerror = function () {
                 this.style.display = 'none';
                 noImgText.style.display = 'block';
             };
-            imgPreview.onload = function() {
+            imgPreview.onload = function () {
                 noImgText.style.display = 'none';
                 this.style.display = 'block';
             };
