@@ -1,8 +1,26 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- ============================================================
+-- seed_data.sql — Restoran SUP TULANG ZZ
+-- Sample / Demo Data (explicit IDs, with INSERT IGNORE)
+-- ============================================================
 
-INSERT INTO `menu_items` (`id`, `name`, `description`, `price`, `category`, `image_path`, `is_available`, `created_at`, `updated_at`) VALUES
+USE restaurant_oms;
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ──────────────────────────────────────────────────────────────
+-- 1. USERS
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `address`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Admin Restoran ZZ', 'admin@suptulangzz.com', '012-3456789', '$2y$12$aq7Iq4UoovdW36x4Mlprv.xMebMkFlaFv59n1M.S5KSMjP6ygeepm', 'admin', 'Jalan Example, Taman Melaka Raya, 75000 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 12:40:17'),
+(2, 'Ahmad Farid', 'ahmad@example.com', '011-2345678', '$2y$12$u0H3VpSHJH/yOAXFb3xvf.bG0zYjf4S1o3Jh7MqK9wD.1UpX8zfVm', 'customer', 'No 12, Jalan Puteri, 75350 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
+(3, 'Siti Aisyah', 'siti@example.com', '013-9876543', '$2y$12$mDuw5c4WVrmthLRElZYbsOQtpMDv/X2LqALsJul3D0DNcANDISN/O', 'customer', 'Apartment Harmoni, Blok B-12, 75450 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 22:03:54'),
+(4, 'Iryn', 'ooi@gmail.com', '125438458', '$2y$12$9hK7.pBGNbnoO6oDAzf38eAhq1taL.o4sqq/nouVuCE67pCER2Q.u', 'staff', NULL, 1, '2026-06-26 12:58:11', '2026-06-26 22:28:11'),
+(5, 'OOI XIEN XIEN', 'xienxien13@gmail.com', '0197560221', '$2y$12$aZupvjm7VnemRze5pXbKA.ExAso7tsGed95VyIlU7dmhO10T2Wnce', 'staff', NULL, 1, '2026-06-26 22:26:18', '2026-06-27 19:41:43');
+
+-- ──────────────────────────────────────────────────────────────
+-- 2. MENU ITEMS
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO `menu_items` (`id`, `name`, `description`, `price`, `category`, `image_path`, `is_available`, `created_at`, `updated_at`) VALUES
 (1, 'Sup Gearbox Kambing', 'Signature lamb gearbox soup with rich traditional broth', 19.00, 'signature-sup', 'menu-images/item1.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
 (2, 'Sup Kambing', 'Tender lamb soup with aromatic spices', 20.00, 'signature-sup', 'menu-images/item2.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
 (3, 'Sup Daging', 'Hearty beef soup with vegetables', 8.00, 'signature-sup', 'menu-images/item3.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
@@ -158,20 +176,26 @@ INSERT INTO `menu_items` (`id`, `name`, `description`, `price`, `category`, `ima
 (153, 'Cendol', 'Shaved ice with pandan jelly and coconut milk', 6.00, 'drinks-dessert', 'menu-images/c3kaDLZ4a6GDXQIqruTWH95djPKyrPQdSlAjfdEU.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:25:07'),
 (155, 'Ayam gunting', NULL, 10.00, 'sarapan-panas', 'menu-images/qxRwqAMIgWNO88lv0XEfuvJRn8WDX8vGz1BR0U34.jpg', 1, '2026-06-28 14:35:25', '2026-06-28 14:35:25');
 
-INSERT INTO `orders` (`id`, `user_id`, `customer_name`, `customer_phone`, `order_type`, `table_number`, `pax`, `delivery_address`, `special_notes`, `payment_method`, `receipt_path`, `subtotal`, `tax`, `delivery_fee`, `total`, `status`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Ahmad Farid', '011-2345678', 'dine-in', 5, NULL, NULL, NULL, 'cash', NULL, 36.00, 2.16, 0.00, 38.16, 'completed', '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
-(2, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, NULL, NULL, NULL, 'online_transfer', NULL, 35.50, 2.13, 3.00, 40.63, 'completed', '2026-06-26 20:39:02', '2026-06-27 19:31:45'),
-(3, 4, 'Guest (Table 3)', '-', 'dine-in', 3, NULL, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'completed', '2026-06-26 13:08:35', '2026-06-26 22:00:59'),
-(4, 3, 'Guest (Table 1)', '-', 'dine-in', 1, NULL, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'completed', '2026-06-26 22:05:40', '2026-06-27 19:31:45'),
-(5, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, NULL, 'Apartment Harmoni, Blok B-12, 75450 Melaka', 'Tableware provided', 'cash', NULL, 47.00, 2.82, 3.00, 52.82, 'completed', '2026-06-26 22:18:30', '2026-06-27 19:31:45'),
-(6, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, NULL, 'Apartment Harmoni, Blok B-12, 75450 Melaka', NULL, 'online_transfer', 'assets/uploads/receipts/6_1782548456.pdf', 35.00, 2.10, 3.00, 40.10, 'completed', '2026-06-27 00:20:56', '2026-06-27 19:31:45'),
-(7, 4, 'Iryn', '125438458', 'delivery', NULL, NULL, NULL, NULL, 'cash', NULL, 59.00, 3.54, 3.00, 65.54, 'confirmed', '2026-06-27 00:43:32', '2026-06-28 14:13:19'),
-(8, 4, 'Guest (Table 3)', '125438458', 'dine-in', 3, NULL, NULL, NULL, 'cash', NULL, 47.00, 2.82, 0.00, 49.82, 'ready', '2026-06-27 00:49:30', '2026-06-28 11:35:39'),
-(9, NULL, 'Guest (Table 2)', '-', 'dine-in', 2, NULL, NULL, NULL, 'cash', NULL, 47.00, 2.82, 0.00, 49.82, 'ready', '2026-06-27 01:06:32', '2026-06-28 14:14:23'),
-(10, NULL, 'Guest (Table 5)', '0197560221', 'takeaway', 5, NULL, NULL, NULL, 'cash', NULL, 20.00, 1.20, 0.00, 21.20, 'pending', '2026-06-27 10:47:45', '2026-06-27 19:54:55'),
-(11, NULL, 'Guest (Table 1)', '-', 'dine-in', 1, NULL, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'preparing', '2026-06-28 14:13:55', '2026-06-28 14:14:33');
+-- ──────────────────────────────────────────────────────────────
+-- 3. ORDERS (pax column removed to avoid #1054 error)
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO `orders` (`id`, `user_id`, `customer_name`, `customer_phone`, `order_type`, `table_number`, `delivery_address`, `special_notes`, `payment_method`, `receipt_path`, `subtotal`, `tax`, `delivery_fee`, `total`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2, 'Ahmad Farid', '011-2345678', 'dine-in', 5, NULL, NULL, 'cash', NULL, 36.00, 2.16, 0.00, 38.16, 'completed', '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
+(2, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, 'Apartment Harmoni, Blok B-12, 75450 Melaka', NULL, 'online_transfer', NULL, 35.50, 2.13, 3.00, 40.63, 'completed', '2026-06-26 20:39:02', '2026-06-27 19:31:45'),
+(3, 4, 'Guest (Table 3)', '-', 'dine-in', 3, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'completed', '2026-06-26 13:08:35', '2026-06-26 22:00:59'),
+(4, 3, 'Guest (Table 1)', '-', 'dine-in', 1, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'completed', '2026-06-26 22:05:40', '2026-06-27 19:31:45'),
+(5, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, 'Apartment Harmoni, Blok B-12, 75450 Melaka', 'Tableware provided', 'cash', NULL, 47.00, 2.82, 3.00, 52.82, 'completed', '2026-06-26 22:18:30', '2026-06-27 19:31:45'),
+(6, 3, 'Siti Aisyah', '013-9876543', 'delivery', NULL, 'Apartment Harmoni, Blok B-12, 75450 Melaka', NULL, 'online_transfer', 'assets/uploads/receipts/6_1782548456.pdf', 35.00, 2.10, 3.00, 40.10, 'completed', '2026-06-27 00:20:56', '2026-06-27 19:31:45'),
+(7, 4, 'Iryn', '125438458', 'delivery', NULL, NULL, NULL, 'cash', NULL, 59.00, 3.54, 3.00, 65.54, 'confirmed', '2026-06-27 00:43:32', '2026-06-28 14:13:19'),
+(8, 4, 'Guest (Table 3)', '125438458', 'dine-in', 3, NULL, NULL, 'cash', NULL, 47.00, 2.82, 0.00, 49.82, 'ready', '2026-06-27 00:49:30', '2026-06-28 11:35:39'),
+(9, NULL, 'Guest (Table 2)', '-', 'dine-in', 2, NULL, NULL, 'cash', NULL, 47.00, 2.82, 0.00, 49.82, 'ready', '2026-06-27 01:06:32', '2026-06-28 14:14:23'),
+(10, NULL, 'Guest (Table 5)', '0197560221', 'takeaway', 5, NULL, NULL, 'cash', NULL, 20.00, 1.20, 0.00, 21.20, 'pending', '2026-06-27 10:47:45', '2026-06-27 19:54:55'),
+(11, NULL, 'Guest (Table 1)', '-', 'dine-in', 1, NULL, NULL, 'cash', NULL, 54.00, 3.24, 0.00, 57.24, 'preparing', '2026-06-28 14:13:55', '2026-06-28 14:14:33');
 
-INSERT INTO `order_items` (`id`, `order_id`, `menu_item_id`, `item_name`, `unit_price`, `quantity`, `line_total`) VALUES
+-- ──────────────────────────────────────────────────────────────
+-- 4. ORDER ITEMS
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO `order_items` (`id`, `order_id`, `menu_item_id`, `item_name`, `unit_price`, `quantity`, `line_total`) VALUES
 (1, 1, 1, 'Sup Gearbox Kambing', 19.00, 1, 19.00),
 (2, 1, 51, 'Nasi Goreng Kampung', 8.00, 1, 8.00),
 (3, 1, 119, 'Teh Tarik', 2.50, 1, 2.50),
@@ -210,7 +234,10 @@ INSERT INTO `order_items` (`id`, `order_id`, `menu_item_id`, `item_name`, `unit_
 (36, 11, 4, 'Sup Ayam', 7.00, 1, 7.00),
 (37, 11, 3, 'Sup Daging', 8.00, 1, 8.00);
 
-INSERT INTO `tables` (`id`, `table_number`, `capacity`, `created_at`, `updated_at`) VALUES
+-- ──────────────────────────────────────────────────────────────
+-- 5. TABLES
+-- ──────────────────────────────────────────────────────────────
+INSERT IGNORE INTO `tables` (`id`, `table_number`, `capacity`, `created_at`, `updated_at`) VALUES
 (1, 3, 4, '2026-06-26 12:43:07', '2026-06-26 12:43:07'),
 (2, 2, 4, '2026-06-26 22:32:15', '2026-06-26 22:32:15'),
 (3, 5, 4, '2026-06-27 09:23:56', '2026-06-27 09:23:56'),
@@ -223,11 +250,4 @@ INSERT INTO `tables` (`id`, `table_number`, `capacity`, `created_at`, `updated_a
 (10, 12, 4, '2026-06-28 11:48:59', '2026-06-28 11:48:59'),
 (11, 13, 4, '2026-06-28 11:49:09', '2026-06-28 11:49:09');
 
-INSERT INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `address`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Admin Restoran ZZ', 'admin@suptulangzz.com', '012-3456789', '$2y$12$aq7Iq4UoovdW36x4Mlprv.xMebMkFlaFv59n1M.S5KSMjP6ygeepm', 'admin', 'Jalan Example, Taman Melaka Raya, 75000 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 12:40:17'),
-(2, 'Ahmad Farid', 'ahmad@example.com', '011-2345678', '$2y$12$u0H3VpSHJH/yOAXFb3xvf.bG0zYjf4S1o3Jh7MqK9wD.1UpX8zfVm', 'customer', 'No 12, Jalan Puteri, 75350 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
-(3, 'Siti Aisyah', 'siti@example.com', '013-9876543', '$2y$12$mDuw5c4WVrmthLRElZYbsOQtpMDv/X2LqALsJul3D0DNcANDISN/O', 'customer', 'Apartment Harmoni, Blok B-12, 75450 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 22:03:54'),
-(4, 'Iryn', 'ooi@gmail.com', '125438458', '$2y$12$9hK7.pBGNbnoO6oDAzf38eAhq1taL.o4sqq/nouVuCE67pCER2Q.u', 'staff', NULL, 1, '2026-06-26 12:58:11', '2026-06-26 22:28:11'),
-(5, 'OOI XIEN XIEN', 'xienxien13@gmail.com', '0197560221', '$2y$12$aZupvjm7VnemRze5pXbKA.ExAso7tsGed95VyIlU7dmhO10T2Wnce', 'staff', NULL, 1, '2026-06-26 22:26:18', '2026-06-27 19:41:43');
-
-COMMIT;
+SET FOREIGN_KEY_CHECKS = 1;
