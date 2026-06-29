@@ -224,7 +224,7 @@ class StaffController extends Controller
             ->header('Content-Disposition', "attachment; filename=\"Table_{$table}_QR.png\"");
     }
 
-    public function closeTable(int $tableNumber): RedirectResponse
+    public function clearTable(int $tableNumber): RedirectResponse
     {
         $this->authorizeStaff();
 

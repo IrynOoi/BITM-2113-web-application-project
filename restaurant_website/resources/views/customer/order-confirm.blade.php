@@ -281,7 +281,7 @@
                     </div>
                     <div class="meta-item">
                         <label>Est. Time</label>
-                        <span>20 â€“ 35 mins</span>
+                        <span>20 – 35 mins</span>
                     </div>
                     <div class="meta-item">
                         <label>Payment</label>

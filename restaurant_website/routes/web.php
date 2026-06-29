@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/staff/manage-tables', [StaffController::class, 'tables'])->name('staff.tables');
     Route::post('/staff/tables', [StaffController::class, 'storeTable'])->name('staff.tables.store');
     Route::delete('/staff/tables/{table}', [StaffController::class, 'destroyTable'])->name('staff.tables.destroy');
-    Route::post('/staff/tables/{tableNumber}/close', [StaffController::class, 'closeTable'])->name('staff.tables.close');
+    Route::post('/staff/tables/{tableNumber}/close', [StaffController::class, 'clearTable'])->name('staff.tables.close');
     Route::get('/staff/manage-users', [StaffController::class, 'users'])->name('staff.users');
     Route::post('/staff/users', [StaffController::class, 'storeUser'])->name('staff.users.store');
     Route::put('/staff/users/{user}', [StaffController::class, 'updateUser'])->name('staff.users.update');

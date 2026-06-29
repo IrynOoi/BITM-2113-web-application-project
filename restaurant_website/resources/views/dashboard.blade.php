@@ -446,8 +446,9 @@
                     <div class="dashboard-main">
 
                         <div class="dashboard-header">
-                            <h1>Welcome back, {{ explode(' ', Auth::user()->full_name)[0] }}! ðŸ‘‹</h1>
-                            <p>Here's a summary of your activity.</p>
+                            @php $firstName = explode(" ", Auth::user()->full_name)[0]; @endphp
+                            <h1>Welcome back, {{ $firstName }}!</h1>
+                            <p>Here’s a summary of your activity.</p>
                         </div>
 
                         <!-- Stats -->
