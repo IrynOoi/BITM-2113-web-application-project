@@ -47,7 +47,7 @@ class StaffController extends Controller
         $this->authorizeStaff();
 
         $statusFilter = $request->input('status', 'active');
-        $dateFilter   = $request->input('date', today()->toDateString());
+        $dateFilter = $request->input('date', today()->toDateString());
 
         $orders = Order::with(['user', 'items'])->withCount('items')
             ->when($statusFilter === 'active', fn($q) => $q->whereIn('status', ['pending', 'confirmed', 'preparing', 'ready']))
@@ -205,7 +205,8 @@ class StaffController extends Controller
                 foreach ($output as $line) {
                     if (preg_match('/IPv4 Address.*: (192\.168\.\d+\.\d+)/', $line, $matches)) {
                         $host = $matches[1];
-                        if (!str_ends_with($host, '.1')) break;
+                        if (!str_ends_with($host, '.1'))
+                            break;
                     }
                 }
             } else {
@@ -214,7 +215,7 @@ class StaffController extends Controller
         }
 
         $qrOrderUrl = "http://{$host}:{$port}/customer/qr-order?table={$table}";
-        $qrApiUrl   = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qrOrderUrl);
+        $qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' . urlencode($qrOrderUrl);
 
         $imageData = file_get_contents($qrApiUrl);
 
@@ -347,104 +348,97 @@ class StaffController extends Controller
 
     public function reports(Request $request): View
     {
-        abort_unless(Auth::user()->role === 'admin', 403);
+        $this->authorizeStaff();
 
-        $from = $request->input('from', today()->toDateString());
-        $to   = $request->input('to',   today()->toDateString());
-
-        $fromDate = Carbon::parse($from)->startOfDay();
-        $toDate   = Carbon::parse($to)->endOfDay();
-
-        // Summary stats for selected range
-        $periodOrders  = Order::whereBetween('created_at', [$fromDate, $toDate])->count();
-        $periodRevenue = Order::whereBetween('created_at', [$fromDate, $toDate])->sum('total');
+        // Summary stats for all time
+        $periodOrders = Order::count();
+        $periodRevenue = Order::sum('total');
 
         // Today & month always shown
-        $dailyOrders   = Order::whereDate('created_at', today())->count();
-        $dailyRevenue  = Order::whereDate('created_at', today())->sum('total');
+        $dailyOrders = Order::whereDate('created_at', today())->count();
+        $dailyRevenue = Order::whereDate('created_at', today())->sum('total');
         $monthlyOrders = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count();
-        $monthlyRevenue= Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
+        $monthlyRevenue = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
 
-        // Order type breakdown for selected range
-        $typeBreakdown = Order::whereBetween('created_at', [$fromDate, $toDate])
-            ->selectRaw('order_type, COUNT(*) as count, SUM(total) as revenue')
+        // Order type breakdown for all time
+        $typeBreakdown = Order::selectRaw('order_type, COUNT(*) as count, SUM(total) as revenue')
             ->groupBy('order_type')
             ->get()
             ->keyBy('order_type');
 
         // Last 7 days chart data
         $dailyLabels = [];
-        $dailyData   = [];
+        $dailyData = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date          = Carbon::today()->subDays($i);
+            $date = Carbon::today()->subDays($i);
             $dailyLabels[] = $date->format('M d');
-            $dailyData[]   = (float) Order::whereDate('created_at', $date)->sum('total');
+            $dailyData[] = (float) Order::whereDate('created_at', $date)->sum('total');
         }
 
         // Monthly chart data
         $monthlyLabels = [];
-        $monthlyData   = [];
+        $monthlyData = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthlyLabels[] = Carbon::create(date('Y'), $i, 1)->format('M');
-            $monthlyData[]   = (float) Order::whereYear('created_at', date('Y'))
-                                            ->whereMonth('created_at', $i)
-                                            ->sum('total');
+            $monthlyData[] = (float) Order::whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', $i)
+                ->sum('total');
         }
 
-        // Top items for selected range
+        // Top items for all time
         $topItems = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->whereBetween('orders.created_at', [$fromDate, $toDate])
-            ->select('order_items.item_name',
-                     DB::raw('SUM(order_items.quantity) as total_quantity'),
-                     DB::raw('SUM(order_items.line_total) as total_revenue'))
+            ->select(
+                'order_items.item_name',
+                DB::raw('SUM(order_items.quantity) as total_quantity'),
+                DB::raw('SUM(order_items.line_total) as total_revenue')
+            )
             ->groupBy('order_items.item_name')
             ->orderByDesc('total_quantity')
             ->limit(5)
             ->get();
 
         return view('staff.reports', compact(
-            'from', 'to',
-            'periodOrders', 'periodRevenue',
-            'dailyOrders', 'dailyRevenue',
-            'monthlyOrders', 'monthlyRevenue',
+            'periodOrders',
+            'periodRevenue',
+            'dailyOrders',
+            'dailyRevenue',
+            'monthlyOrders',
+            'monthlyRevenue',
             'typeBreakdown',
-            'dailyLabels', 'dailyData',
-            'monthlyLabels', 'monthlyData',
+            'dailyLabels',
+            'dailyData',
+            'monthlyLabels',
+            'monthlyData',
             'topItems'
         ));
     }
 
     public function exportReport(Request $request)
     {
-        abort_unless(Auth::user()->role === 'admin', 403);
+        $this->authorizeStaff();
 
-        $from = $request->input('from', today()->toDateString());
-        $to   = $request->input('to',   today()->toDateString());
-
-        $fromDate = Carbon::parse($from)->startOfDay();
-        $toDate   = Carbon::parse($to)->endOfDay();
-
-        $dailyOrders   = Order::whereDate('created_at', today())->count();
-        $dailyRevenue  = Order::whereDate('created_at', today())->sum('total');
+        $dailyOrders = Order::whereDate('created_at', today())->count();
+        $dailyRevenue = Order::whereDate('created_at', today())->sum('total');
         $monthlyOrders = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->count();
-        $monthlyRevenue= Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
+        $monthlyRevenue = Order::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->sum('total');
 
-        $periodOrders  = Order::whereBetween('created_at', [$fromDate, $toDate])->count();
-        $periodRevenue = Order::whereBetween('created_at', [$fromDate, $toDate])->sum('total');
+        $periodOrders = Order::count();
+        $periodRevenue = Order::sum('total');
 
-        $typeBreakdown = Order::whereBetween('created_at', [$fromDate, $toDate])
-            ->selectRaw('order_type, COUNT(*) as count, SUM(total) as revenue')
-            ->groupBy('order_type')
-            ->get()
-            ->keyBy('order_type');
+        // $typeBreakdown = Order::whereBetween('created_at', [$fromDate, $toDate])
+        //     ->selectRaw('order_type, COUNT(*) as count, SUM(total) as revenue')
+        //     ->groupBy('order_type')
+        //     ->get()
+        //     ->keyBy('order_type');
 
         $topItems = DB::table('order_items')
             ->join('orders', 'orders.id', '=', 'order_items.order_id')
-            ->whereBetween('orders.created_at', [$fromDate, $toDate])
-            ->select('order_items.item_name',
-                     DB::raw('SUM(order_items.quantity) as total_quantity'),
-                     DB::raw('SUM(order_items.line_total) as total_revenue'))
+            ->select(
+                'order_items.item_name',
+                DB::raw('SUM(order_items.quantity) as total_quantity'),
+                DB::raw('SUM(order_items.line_total) as total_revenue')
+            )
             ->groupBy('order_items.item_name')
             ->orderByDesc('total_quantity')
             ->limit(5)
@@ -452,31 +446,33 @@ class StaffController extends Controller
 
         // Last 7 days chart
         $dailyLabels = [];
-        $dailyData   = [];
+        $dailyData = [];
         for ($i = 6; $i >= 0; $i--) {
-            $date          = Carbon::today()->subDays($i);
+            $date = Carbon::today()->subDays($i);
             $dailyLabels[] = $date->format('M d');
-            $dailyData[]   = (float) Order::whereDate('created_at', $date)->sum('total');
+            $dailyData[] = (float) Order::whereDate('created_at', $date)->sum('total');
         }
 
         // Monthly chart
         $monthlyLabels = [];
-        $monthlyData   = [];
+        $monthlyData = [];
         for ($i = 1; $i <= 12; $i++) {
             $monthlyLabels[] = Carbon::create(date('Y'), $i, 1)->format('M');
-            $monthlyData[]   = (float) Order::whereYear('created_at', date('Y'))
-                                            ->whereMonth('created_at', $i)->sum('total');
+            $monthlyData[] = (float) Order::whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', $i)->sum('total');
         }
 
         $dailyChartUrl = 'https://quickchart.io/chart?w=600&h=250&c=' . urlencode(json_encode([
             'type' => 'bar',
             'data' => [
-                'labels'   => $dailyLabels,
-                'datasets' => [[
-                    'label'           => 'Revenue (RM)',
-                    'data'            => $dailyData,
-                    'backgroundColor' => 'rgba(192,57,43,0.75)',
-                ]],
+                'labels' => $dailyLabels,
+                'datasets' => [
+                    [
+                        'label' => 'Revenue (RM)',
+                        'data' => $dailyData,
+                        'backgroundColor' => 'rgba(192,57,43,0.75)',
+                    ]
+                ],
             ],
             'options' => ['plugins' => ['legend' => ['display' => false]]],
         ]));
@@ -484,30 +480,38 @@ class StaffController extends Controller
         $monthlyChartUrl = 'https://quickchart.io/chart?w=600&h=250&c=' . urlencode(json_encode([
             'type' => 'bar',
             'data' => [
-                'labels'   => $monthlyLabels,
-                'datasets' => [[
-                    'label'           => 'Revenue (RM)',
-                    'data'            => $monthlyData,
-                    'backgroundColor' => 'rgba(39,174,96,0.75)',
-                ]],
+                'labels' => $monthlyLabels,
+                'datasets' => [
+                    [
+                        'label' => 'Revenue (RM)',
+                        'data' => $monthlyData,
+                        'backgroundColor' => 'rgba(39,174,96,0.75)',
+                    ]
+                ],
             ],
             'options' => ['plugins' => ['legend' => ['display' => false]]],
         ]));
 
         $pdf = Pdf::loadView('staff.reports-pdf', compact(
-            'from', 'to',
-            'dailyOrders', 'dailyRevenue',
-            'monthlyOrders', 'monthlyRevenue',
-            'periodOrders', 'periodRevenue',
-            'typeBreakdown', 'topItems',
-            'dailyLabels', 'dailyData',
-            'monthlyLabels', 'monthlyData',
-            'dailyChartUrl', 'monthlyChartUrl'
+            'dailyOrders',
+            'dailyRevenue',
+            'monthlyOrders',
+            'monthlyRevenue',
+            'periodOrders',
+            'periodRevenue',
+            'typeBreakdown',
+            'topItems',
+            'dailyLabels',
+            'dailyData',
+            'monthlyLabels',
+            'monthlyData',
+            'dailyChartUrl',
+            'monthlyChartUrl'
         ));
 
         $pdf->setPaper('a4', 'portrait');
         $pdf->setOption(['isRemoteEnabled' => true]);
 
-        return $pdf->download('sales_report_' . $from . '_to_' . $to . '.pdf');
+        return $pdf->download('sales_report_all_time.pdf');
     }
 }

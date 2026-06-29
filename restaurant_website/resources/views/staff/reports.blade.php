@@ -1,32 +1,16 @@
-﻿@extends('layouts.staff')
+@extends('layouts.staff')
 
 @section('title', 'Sales Reports - Restoran SUP TULANG ZZ')
 
 @section('content')
 <div class="staff-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
     <h1>Sales Reports</h1>
-    <a href="{{ route('staff.reports.export') }}?from={{ $from }}&to={{ $to }}" class="btn-primary" style="text-decoration:none; padding:10px 20px; border-radius:8px; background:#e67e22; color:white; font-weight:600;">
+    <a href="{{ route('staff.reports.export') }}" class="btn-primary" style="text-decoration:none; padding:10px 20px; border-radius:8px; background:#e67e22; color:white; font-weight:600;">
         <i class="fas fa-file-pdf"></i> Export PDF
     </a>
 </div>
 
-{{-- Date Range Filter --}}
-<form method="GET" action="{{ route('staff.reports') }}" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:24px; background:#fff; padding:16px 20px; border-radius:12px; border:1px solid #f0ebe4;">
-    <label style="font-size:0.85rem; font-weight:600; color:#2c3e50;">Date Range:</label>
-    <input type="date" name="from" value="{{ $from }}" class="filter-input" style="width:160px;">
-    <span style="color:#aaa;">to</span>
-    <input type="date" name="to" value="{{ $to }}" class="filter-input" style="width:160px;">
-    <button type="submit" style="padding:9px 20px; background:#c0392b; color:#fff; border:none; border-radius:8px; font-size:0.875rem; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <i class="fas fa-search"></i> Apply
-    </button>
-    <a href="{{ route('staff.reports') }}" style="padding:9px 18px; background:#fff; color:#888; border:2px solid #e0e0e0; border-radius:8px; font-size:0.875rem; font-weight:600; text-decoration:none; display:flex; align-items:center; gap:6px;">
-        <i class="fas fa-undo"></i> Reset
-    </a>
-    <span style="margin-left:auto; font-size:0.82rem; color:#888;">
-        Showing: <strong>{{ \Carbon\Carbon::parse($from)->format('d M Y') }}</strong>
-        @if($from !== $to) â€“ <strong>{{ \Carbon\Carbon::parse($to)->format('d M Y') }}</strong> @endif
-    </span>
-</form>
+
 
 {{-- Stats Grid --}}
 <div class="stats-grid" style="margin-bottom:24px;">
@@ -65,7 +49,7 @@
 
     <div style="background:#fff; border-radius:14px; border:1px solid #f0ebe4; padding:20px;">
         <h3 style="font-size:0.95rem; font-weight:700; color:#2c3e50; margin-bottom:16px;">
-            <i class="fas fa-filter" style="color:#c0392b;"></i> Period Summary
+            <i class="fas fa-filter" style="color:#c0392b;"></i> All Time Summary
         </h3>
         <div style="display:flex; flex-direction:column; gap:12px;">
             <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -127,7 +111,7 @@
 <div style="background:#fff; border-radius:14px; border:1px solid #f0ebe4; padding:20px;">
     <h3 style="font-size:0.95rem; font-weight:700; color:#2c3e50; margin-bottom:16px;">
         <i class="fas fa-trophy" style="color:#e67e22;"></i> Top 5 Bestselling Items
-        <small style="font-weight:400; color:#aaa; font-size:0.78rem;">(selected period)</small>
+        <small style="font-weight:400; color:#aaa; font-size:0.78rem;">(All Time)</small>
     </h3>
     <div class="table-responsive">
         <table class="staff-table">

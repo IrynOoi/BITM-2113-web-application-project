@@ -231,7 +231,7 @@ function initOrderType() {
     if (btnCheckout) {
         btnCheckout.innerHTML = defaultType === 'online'
             ? '<i class="fas fa-lock"></i> Proceed to Checkout'
-            : '<i class="fas fa-qrcode"></i> Order at Table';
+            : '<i class="fas fa-qrcode"></i> Proceed Order';
     }
 
     orderTypeInputs.forEach(input => {
@@ -239,7 +239,7 @@ function initOrderType() {
             if (this.value === 'online') {
                 btnCheckout.innerHTML = '<i class="fas fa-lock"></i> Proceed to Checkout';
             } else {
-                btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Order at Table';
+                btnCheckout.innerHTML = '<i class="fas fa-qrcode"></i> Proceed Order';
             }
         });
     });
