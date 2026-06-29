@@ -36,8 +36,17 @@ class CustomerController extends Controller
         return view('customer.checkout');
     }
 
-    public function qrOrder(): View
+    public function qrOrder(Request $request): View|\Illuminate\Contracts\View\View
     {
+        $tableNumber = $request->query('table');
+
+        if ($tableNumber !== null) {
+            $exists = DB::table('tables')->where('table_number', (int) $tableNumber)->exists();
+            if (!$exists) {
+                abort(404, "Table {$tableNumber} does not exist.");
+            }
+        }
+
         return view('customer.qr-order');
     }
 
@@ -98,7 +107,7 @@ class CustomerController extends Controller
             'custName' => ['required', 'string', 'max:100'],
             'custPhone' => [Rule::requiredIf(fn() => in_array($request->orderType, ['pickup', 'delivery'])), 'nullable', 'string', 'max:20'],
             'orderType' => ['required', Rule::in(['dine-in', 'takeaway', 'pickup', 'delivery'])],
-            'tableNumber' => ['nullable', 'integer', 'min:1'],
+            'tableNumber' => ['nullable', 'integer', 'min:1', Rule::exists('tables', 'table_number')],
             'paxNumber' => ['nullable', 'integer', 'min:1'],
             'address' => ['nullable', 'string', 'max:500'],
             'notes' => ['nullable', 'string', 'max:500'],
@@ -197,6 +206,13 @@ class CustomerController extends Controller
             'orderId' => $order?->id,
             'order'   => $order,
         ]);
+    }
+
+    public function checkTable(Request $request): JsonResponse
+    {
+        $tableNumber = $request->query('table');
+        $exists = DB::table('tables')->where('table_number', $tableNumber)->exists();
+        return response()->json(['exists' => $exists]);
     }
 
     public function menuItemsJson(): JsonResponse

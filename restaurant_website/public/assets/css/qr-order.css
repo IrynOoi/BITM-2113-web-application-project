@@ -304,6 +304,17 @@
     margin-bottom: 0.2rem;
 }
 
+.menu-item-description {
+    font-size: 0.75rem;
+    color: #888;
+    margin-bottom: 0.3rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .menu-item-price {
     font-size: 0.95rem;
     font-weight: 700;

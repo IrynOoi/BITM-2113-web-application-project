@@ -23,6 +23,7 @@ Route::get('/customer/qr-order', [CustomerController::class, 'qrOrder'])->name('
 Route::get('/api/orders/status', [CustomerController::class, 'orderStatusJson'])->name('api.orders.status');
 Route::get('/api/menu-items', [CustomerController::class, 'menuItemsJson'])->name('api.menu-items');
 Route::get('/api/table-orders', [CustomerController::class, 'tableOrdersJson'])->name('api.table-orders');
+Route::get('/api/check-table', [CustomerController::class, 'checkTable'])->name('api.check-table');
 Route::middleware('auth')->group(function () {
     Route::get('/staff/qr-download/{table}', [StaffController::class, 'downloadQr'])->name('staff.qr-download');
     Route::get('/dashboard', [CustomerController::class, 'dashboard'])->name('dashboard');

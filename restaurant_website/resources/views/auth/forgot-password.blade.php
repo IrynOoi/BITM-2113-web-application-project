@@ -174,16 +174,9 @@
             <div class="auth-card">
                 <div class="auth-header">
                     <img src="{{ asset('assets/images/Logo.jpeg') }}" alt="Logo" class="auth-logo">
-                    <h2>Reset Password</h2>
-                    <p>Enter your email address and your new password to reset your account.</p>
+                    <h2>Forgot Password</h2>
+                    <p>Enter your registered email address and we'll send you an OTP to reset your password.</p>
                 </div>
-
-                @if(session('status'))
-                    <div class="auth-error" style="background: #e8f5e9; border-color: #c8e6c9; color: #2e7d32;">
-                        <i class="fas fa-check-circle"></i>
-                        <span>{{ session('status') }}</span>
-                    </div>
-                @endif
 
                 @if($errors->any())
                     <div class="auth-error">
@@ -204,26 +197,8 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="password">New Password <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password" name="password" placeholder="Enter new password" required>
-                            <button type="button" class="toggle-password" id="togglePwd"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password_confirmation">Confirm Password <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <i class="fas fa-lock"></i>
-                            <input type="password" id="password_confirmation" name="password_confirmation" placeholder="Confirm new password" required>
-                            <button type="button" class="toggle-password" id="togglePwdConfirm"><i class="fas fa-eye"></i></button>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn-auth">
-                        <i class="fas fa-key"></i> Reset Password
+                        <i class="fas fa-paper-plane"></i> Send OTP
                     </button>
                 </form>
 

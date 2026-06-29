@@ -100,7 +100,10 @@ class StaffController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image_path'] = $request->file('image')->store('menu-images', 'public');
+            $file = $request->file('image');
+            $filename = 'item' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/menu-image'), $filename);
+            $validated['image_path'] = 'menu-images/' . $filename;
         }
 
         MenuItem::create($validated);
@@ -121,7 +124,10 @@ class StaffController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image_path'] = $request->file('image')->store('menu-images', 'public');
+            $file = $request->file('image');
+            $filename = 'item' . time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('assets/images/menu-image'), $filename);
+            $validated['image_path'] = 'menu-images/' . $filename;
         }
 
         $menuItem->update($validated);
@@ -142,7 +148,13 @@ class StaffController extends Controller
     {
         $this->authorizeStaff();
 
-        // Alternatively, soft delete or just set is_available = false
+        if ($menuItem->image_path) {
+            $filePath = public_path('assets/images/menu-image/' . basename($menuItem->image_path));
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
         $menuItem->delete();
 
         return back()->with('success', 'Menu item deleted successfully.');

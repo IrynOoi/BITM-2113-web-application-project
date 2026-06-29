@@ -75,14 +75,6 @@
             @endif
             <div style="display:flex; gap:5px; margin-top:10px; flex-wrap:wrap;">
                 <button class="btn-table-action" onclick="viewTable({{ $table->table_number }}, '{{ $qrUrl }}', {{ $isOccupied ? 'true' : 'false' }}, '{{ $orderCount }} order(s)', '{{ $isOccupied ? 'RM '.number_format($activeTotal, 2) : '-' }}')" style="flex:1;">View</button>
-                @if($isOccupied)
-                    <form method="POST" action="{{ route('staff.tables.close', $table->table_number) }}" onsubmit="return confirm('Close Table {{ $table->table_number }}? This will mark all active orders as completed.');" style="flex:1;">
-                        @csrf
-                        <button type="submit" style="width:100%; background:#27ae60; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;" title="Close Table">
-                            <i class="fas fa-check-circle"></i> Close
-                        </button>
-                    </form>
-                @endif
                 <form method="POST" action="{{ route('staff.tables.destroy', $table->id) }}" onsubmit="return confirm('Are you sure you want to delete Table {{ $table->table_number }}?');">
                     @csrf
                     @method('DELETE')
@@ -91,6 +83,14 @@
                     </button>
                 </form>
             </div>
+            @if($isOccupied)
+                <form method="POST" action="{{ route('staff.tables.close', $table->table_number) }}" onsubmit="return confirm('Clear Table {{ $table->table_number }}? This will complete all active orders and free the table.');" style="margin-top:8px;">
+                    @csrf
+                    <button type="submit" style="width:100%; background:#27ae60; color:white; border:none; padding:8px 12px; border-radius:4px; cursor:pointer; font-size:0.8rem;" title="Mark all orders as completed and free the table">
+                        <i class="fas fa-check-circle"></i> Clear Table
+                    </button>
+                </form>
+            @endif
         </div>
     @empty
         <p>No tables configured.</p>

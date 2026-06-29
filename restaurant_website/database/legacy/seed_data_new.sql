@@ -11,11 +11,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- 1. USERS
 -- ──────────────────────────────────────────────────────────────
 INSERT IGNORE INTO `users` (`id`, `full_name`, `email`, `phone`, `password`, `role`, `address`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Admin Restoran ZZ', 'admin@suptulangzz.com', '012-3456789', '$2y$12$aq7Iq4UoovdW36x4Mlprv.xMebMkFlaFv59n1M.S5KSMjP6ygeepm', 'admin', 'Jalan Example, Taman Melaka Raya, 75000 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 12:40:17'),
-(2, 'Ahmad Farid', 'ahmad@example.com', '011-2345678', '$2y$12$u0H3VpSHJH/yOAXFb3xvf.bG0zYjf4S1o3Jh7MqK9wD.1UpX8zfVm', 'customer', 'No 12, Jalan Puteri, 75350 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
-(3, 'Siti Aisyah', 'siti@example.com', '013-9876543', '$2y$12$mDuw5c4WVrmthLRElZYbsOQtpMDv/X2LqALsJul3D0DNcANDISN/O', 'customer', 'Apartment Harmoni, Blok B-12, 75450 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 22:03:54'),
-(4, 'Iryn', 'ooi@gmail.com', '125438458', '$2y$12$9hK7.pBGNbnoO6oDAzf38eAhq1taL.o4sqq/nouVuCE67pCER2Q.u', 'staff', NULL, 1, '2026-06-26 12:58:11', '2026-06-26 22:28:11'),
-(5, 'OOI XIEN XIEN', 'xienxien13@gmail.com', '0197560221', '$2y$12$aZupvjm7VnemRze5pXbKA.ExAso7tsGed95VyIlU7dmhO10T2Wnce', 'staff', NULL, 1, '2026-06-26 22:26:18', '2026-06-27 19:41:43');
+(1, 'Admin Restoran ZZ', 'admin@suptulangzz.com', '012-3456789', '$2y$12$cs31RMZjqtp60B3q9Fz/POMIUmXhViK7s5W9unrpJer7XanI.pSNG', 'admin', 'Jalan Example, Taman Melaka Raya, 75000 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 12:40:17'),
+(2, 'Ahmad Farid', 'ahmad@example.com', '011-2345678', '$2y$12$NucjSwCqTAt2vvQjEV3YNecm6Z6f7rNZURYBwxGiUcuFIvaU43kPy', 'customer', 'No 12, Jalan Puteri, 75350 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 20:39:02'),
+(3, 'Siti Aisyah', 'siti@example.com', '013-9876543', '$2y$12$NucjSwCqTAt2vvQjEV3YNecm6Z6f7rNZURYBwxGiUcuFIvaU43kPy', 'customer', 'Apartment Harmoni, Blok B-12, 75450 Melaka', 1, '2026-06-26 20:39:02', '2026-06-26 22:03:54'),
+(4, 'Iryn', 'ooi@gmail.com', '125438458', '$2y$12$NucjSwCqTAt2vvQjEV3YNecm6Z6f7rNZURYBwxGiUcuFIvaU43kPy', 'staff', NULL, 1, '2026-06-26 12:58:11', '2026-06-26 22:28:11'),
+(5, 'OOI XIEN XIEN', 'xienxien13@gmail.com', '0197560221', '$2y$12$NucjSwCqTAt2vvQjEV3YNecm6Z6f7rNZURYBwxGiUcuFIvaU43kPy', 'staff', NULL, 1, '2026-06-26 22:26:18', '2026-06-27 19:41:43');
 
 -- ──────────────────────────────────────────────────────────────
 -- 2. MENU ITEMS
@@ -165,16 +165,15 @@ INSERT IGNORE INTO `menu_items` (`id`, `name`, `description`, `price`, `category
 (142, 'Sirap Bandung (Cold)', 'Iced rose syrup with milk', 3.50, 'drinks-noncoffee', 'menu-images/item142.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
 (143, 'Sirap Bandung Soda (Cold)', 'Sparkling rose milk drink', 4.00, 'drinks-noncoffee', 'menu-images/item143.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
 (144, 'Limau (Hot)', 'Hot lime juice', 2.70, 'drinks-noncoffee', 'menu-images/item144.png', 1, '2026-06-26 23:35:34', '2026-06-26 23:35:34'),
-(145, 'Limau (Cold)', 'Iced lime juice', 3.00, 'drinks', 'menu-images/hfb3hJeGoyDJmnOPEZtfSXho0B7Fnygcltg7KVhl.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 16:39:24'),
-(146, 'Jus Orange', 'Fresh orange juice', 5.00, 'drinks', 'menu-images/cSVWt9RnebdRJugmhpLG6uHm773QrLrcPVpceXXG.webp', 1, '2026-06-26 23:35:34', '2026-06-27 16:42:19'),
-(147, 'Jus Apple', 'Fresh apple juice', 5.00, 'drinks', 'menu-images/hG8QAvcixCdNI916MyF8YVlpwk16IlEUkhh4iSWm.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 16:43:22'),
-(148, 'Jus Watermelon', 'Fresh watermelon juice', 5.00, 'drinks-jus', 'menu-images/zsysaDnuKQXnuKTr78DKrPwJvGNji3IJvhlgzgpU.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:18:20'),
-(149, 'Jus Lychee', 'Sweet lychee juice', 5.00, 'drinks-jus', 'menu-images/ZRyI8dgdtXtoc7Sk6hsroDvgZHxwZPSTrx6NIJD7.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:19:18'),
-(150, 'Jus Lemon', 'Fresh lemon juice', 5.00, 'drinks-jus', 'menu-images/FTvRsk8N4D97mD99JTefjYuhcmK5yFtkMDmczEz5.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:19:57'),
-(151, 'Cikong', 'Refreshing traditional dessert drink', 6.00, 'drinks-dessert', 'menu-images/HSmfMxwLVHs69JIuCMaZtKatVPB5L5ePnUJLu3fb.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:21:50'),
-(152, 'Ais Jelly Limau', 'Lime jelly ice dessert', 6.00, 'drinks-dessert', 'menu-images/6gqrlVo9DpUjCwH3zPy39ebbqvDIMFlspjqHiUHZ.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:23:38'),
-(153, 'Cendol', 'Shaved ice with pandan jelly and coconut milk', 6.00, 'drinks-dessert', 'menu-images/c3kaDLZ4a6GDXQIqruTWH95djPKyrPQdSlAjfdEU.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:25:07'),
-(155, 'Ayam gunting', NULL, 10.00, 'sarapan-panas', 'menu-images/qxRwqAMIgWNO88lv0XEfuvJRn8WDX8vGz1BR0U34.jpg', 1, '2026-06-28 14:35:25', '2026-06-28 14:35:25');
+(145, 'Limau (Cold)', 'Iced lime juice', 3.00, 'drinks', 'menu-images/item145.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 16:39:24'),
+(146, 'Jus Orange', 'Fresh orange juice', 5.00, 'drinks', 'menu-images/item146.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 16:42:19'),
+(147, 'Jus Apple', 'Fresh apple juice', 5.00, 'drinks', 'menu-images/item147.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 16:43:22'),
+(148, 'Jus Watermelon', 'Fresh watermelon juice', 5.00, 'drinks-jus', 'menu-images/item148.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:18:20'),
+(149, 'Jus Lychee', 'Sweet lychee juice', 5.00, 'drinks-jus', 'menu-images/item149.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:19:18'),
+(150, 'Jus Lemon', 'Fresh lemon juice', 5.00, 'drinks-jus', 'menu-images/item150.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:19:57'),
+(151, 'Cikong', 'Refreshing traditional dessert drink', 6.00, 'drinks-dessert', 'menu-images/item151.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:21:50'),
+(152, 'Ais Jelly Limau', 'Lime jelly ice dessert', 6.00, 'drinks-dessert', 'menu-images/item152.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:23:38'),
+(153, 'Cendol', 'Shaved ice with pandan jelly and coconut milk', 6.00, 'drinks-dessert', 'menu-images/item153.jpg', 1, '2026-06-26 23:35:34', '2026-06-27 19:25:07');
 
 -- ──────────────────────────────────────────────────────────────
 -- 3. ORDERS (pax column removed to avoid #1054 error)

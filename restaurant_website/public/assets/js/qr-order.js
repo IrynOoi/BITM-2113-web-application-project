@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
             menuItems = data.map(item => ({
                 id: item.id,
                 name: item.name,
+                description: item.description || '',
                 category: categoryMap[item.category] || item.category,
                 price: parseFloat(item.price),
                 image: item.image_path || '',
@@ -180,21 +181,42 @@ function initScrollers() {
 // ========================================
 function initDineIn() {
     document.getElementById('btnDineIn').addEventListener('click', () => {
-        document.getElementById('tableSelectionScreen').style.display = 'none';
-        document.getElementById('menuOrderScreen').style.display = 'block';
-        document.getElementById('orderSummaryBar').style.display = 'block';
-        document.getElementById('displayTableNumber').textContent = currentTable;
-        document.getElementById('displayPax').textContent = currentPax + ' pax';
-        document.getElementById('confirmTable').textContent = currentTable;
-        document.getElementById('confirmPax').textContent = currentPax;
+        const btn = document.getElementById('btnDineIn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking table...';
 
-        initSearch();
-        renderMenu(menuItems);
-        initCategoryFilter();
-        initOrderPanel();
-        initPlaceOrder();
-        initChangeTable();
-        initMobileMenu();
+        fetch(`/api/check-table?table=${currentTable}`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.exists) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-utensils"></i> Dine In';
+                    alert(`Table ${currentTable} does not exist. Please select a valid table.`);
+                    return;
+                }
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-utensils"></i> Dine In';
+                document.getElementById('tableSelectionScreen').style.display = 'none';
+                document.getElementById('menuOrderScreen').style.display = 'block';
+                document.getElementById('orderSummaryBar').style.display = 'block';
+                document.getElementById('displayTableNumber').textContent = currentTable;
+                document.getElementById('displayPax').textContent = currentPax + ' pax';
+                document.getElementById('confirmTable').textContent = currentTable;
+                document.getElementById('confirmPax').textContent = currentPax;
+
+                initSearch();
+                renderMenu(menuItems);
+                initCategoryFilter();
+                initOrderPanel();
+                initPlaceOrder();
+                initChangeTable();
+                initMobileMenu();
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-utensils"></i> Dine In';
+                alert('Unable to verify table. Please try again.');
+            });
     });
 }
 
@@ -262,11 +284,12 @@ function renderMenu(items) {
         return `
             <div class="menu-item-card">
                 <div class="menu-item-image">
-                    <img src="${getMenuItemImage(item.id)}" onerror="this.src='${getFallbackImage()}'" alt="${item.name}">
+                    <img src="${item.image ? `${getAssetBase()}/images/menu-image/${item.image.split('/').pop()}` : getMenuItemImage(item.id)}" onerror="this.src='${getFallbackImage()}'" alt="${item.name}">
                     ${item.badge ? `<span class="menu-item-badge badge-${item.badge}">${getBadge(item.badge)}</span>` : ''}
                 </div>
                 <div class="menu-item-body">
                     <div class="menu-item-name">${item.name}</div>
+                    ${item.description ? `<div class="menu-item-description">${item.description}</div>` : ''}
                     <div class="menu-item-price">RM ${item.price.toFixed(2)}</div>
                     <div class="menu-item-footer">
                         ${qty > 0 ? `<span class="quantity-added">x${qty}</span>` : '<span></span>'}

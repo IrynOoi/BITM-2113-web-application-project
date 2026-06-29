@@ -31,19 +31,88 @@
                 <button class="filter-btn active" data-category="all">
                     <i class="fas fa-th-large"></i> All
                 </button>
-                <button class="filter-btn" data-category="soup">
-                    <i class="fas fa-mug-hot"></i> Soup
+
+                <button class="filter-btn" data-category="signature-sup">
+                    <i class="fas fa-crown"></i> Sup ZZ
                 </button>
-                <button class="filter-btn" data-category="main">
-                    <i class="fas fa-utensils"></i> Main
+
+                <button class="filter-btn" data-category="signature-mee">
+                    <i class="fas fa-crown"></i> Mee Rebus ZZ
                 </button>
-                <button class="filter-btn" data-category="snacks">
-                    <i class="fas fa-cookie-bite"></i> Snacks
+
+                <button class="filter-btn" data-category="sarapan-panas">
+                    <i class="fas fa-coffee"></i> Sarapan Panas
                 </button>
-                <button class="filter-btn" data-category="drinks">
-                    <i class="fas fa-glass-water"></i> Drinks
+
+                <button class="filter-btn" data-category="sarapan-roti">
+                    <i class="fas fa-bread-slice"></i> Roti Bakar
                 </button>
-                <button class="filter-btn" data-category="dessert">
+
+                <button class="filter-btn" data-category="roti-canai">
+                    <i class="fas fa-bread-slice"></i> Roti Canai
+                </button>
+
+                <button class="filter-btn" data-category="set-nasi">
+                    <i class="fas fa-utensils"></i> Set Nasi
+                </button>
+
+                <button class="filter-btn" data-category="set-panas">
+                    <i class="fas fa-utensils"></i> Set Masakan
+                </button>
+
+                <button class="filter-btn" data-category="ikan-siakap">
+                    <i class="fas fa-fish"></i> Ikan Siakap
+                </button>
+
+                <button class="filter-btn" data-category="ikan-bakar">
+                    <i class="fas fa-fire"></i> Bakar-Bakar
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-sayur">
+                    <i class="fas fa-leaf"></i> Sayur
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-lauk">
+                    <i class="fas fa-book-open"></i> Lauk Thai
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-tepung">
+                    <i class="fas fa-book-open"></i> Goreng Tepung
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-sup">
+                    <i class="fas fa-mug-hot"></i> Sup Ala Thai
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-tomyam">
+                    <i class="fas fa-pepper-hot"></i> Tomyam
+                </button>
+
+                <button class="filter-btn" data-category="alacarte-meekuah">
+                    <i class="fas fa-book-open"></i> Mee Kuah
+                </button>
+
+                <button class="filter-btn" data-category="western">
+                    <i class="fas fa-hamburger"></i> Western
+                </button>
+
+                <button class="filter-btn" data-category="goreng-nasi">
+                    <i class="fas fa-hotdog"></i> Nasi Goreng
+                </button>
+
+                <button class="filter-btn" data-category="goreng-mee">
+                    <i class="fas fa-hotdog"></i> Mee Goreng
+                </button>
+
+                <button class="filter-btn" data-category="drinks-noncoffee">
+                    <i class="fas fa-mug-hot"></i> Drinks
+                </button>
+
+                <button class="filter-btn" data-category="drinks-jus">
+                    <i class="fas fa-glass-water"></i> Jus
+                </button>
+
+                <button class="filter-btn" data-category="drinks-dessert">
                     <i class="fas fa-ice-cream"></i> Dessert
                 </button>
             </div>
@@ -132,7 +201,7 @@
                 'name' => $item->name,
                 'category' => $item->category,
                 'price' => (float)$item->price,
-                'image' => $item->image_path ? Storage::url($item->image_path) : null,
+                'image' => $item->image_path ? asset('assets/images/menu-image/' . basename($item->image_path)) : null,
                 'description' => $item->description ?? '',
                 'badge' => '',
                 'rating' => 0,

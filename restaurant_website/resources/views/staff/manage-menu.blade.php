@@ -37,8 +37,8 @@
                     <tr>
                         <td>
                             @if($item->image_path)
-                                <img src="{{ Storage::url($item->image_path) }}" class="menu-thumb" alt="{{ $item->name }}"
-                                    style="width:50px; height:50px; object-fit:cover; border-radius:4px;">
+                                <img src="{{ asset('assets/images/menu-image/' . basename($item->image_path)) }}" class="menu-thumb" alt="{{ $item->name }}"
+                                    style="width:50px; height:50px; object-fit:cover; border-radius:4px;" onerror="this.src='{{ asset('assets/images/menu-image/item' . $item->id . '.png') }}'">
                             @else
                                 <img src="{{ asset('assets/images/menu-image/item' . $item->id . '.png') }}" class="menu-thumb"
                                     alt="{{ $item->name }}" style="width:50px; height:50px; object-fit:cover; border-radius:4px;"
@@ -121,11 +121,27 @@
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Category</label>
                         <select name="category" class="filter-input" style="width: 100%; margin-top:5px;" required>
-                            <option value="main">Main</option>
-                            <option value="drinks">Drinks</option>
-                            <option value="dessert">Dessert</option>
-                            <option value="snacks">Snacks</option>
-                            <option value="soup">Soup</option>
+                            <option value="signature-sup">Sup ZZ</option>
+                            <option value="signature-mee">Mee Rebus ZZ</option>
+                            <option value="sarapan-panas">Sarapan Panas</option>
+                            <option value="sarapan-roti">Roti Bakar</option>
+                            <option value="roti-canai">Roti Canai</option>
+                            <option value="set-nasi">Set Nasi</option>
+                            <option value="set-panas">Set Masakan</option>
+                            <option value="ikan-siakap">Ikan Siakap</option>
+                            <option value="ikan-bakar">Bakar-Bakar</option>
+                            <option value="alacarte-sayur">Sayur</option>
+                            <option value="alacarte-lauk">Lauk Thai</option>
+                            <option value="alacarte-tepung">Goreng Tepung</option>
+                            <option value="alacarte-sup">Sup Ala Thai</option>
+                            <option value="alacarte-tomyam">Tomyam</option>
+                            <option value="alacarte-meekuah">Mee Kuah</option>
+                            <option value="western">Western</option>
+                            <option value="goreng-nasi">Nasi Goreng</option>
+                            <option value="goreng-mee">Mee Goreng</option>
+                            <option value="drinks-noncoffee">Drinks</option>
+                            <option value="drinks-jus">Jus</option>
+                            <option value="drinks-dessert">Dessert</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
@@ -172,13 +188,28 @@
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">
                         <label>Category</label>
-                        <select name="category" id="edit_category" class="filter-input" style="width: 100%; margin-top:5px;"
-                            required>
-                            <option value="main">Main</option>
-                            <option value="drinks">Drinks</option>
-                            <option value="dessert">Dessert</option>
-                            <option value="snacks">Snacks</option>
-                            <option value="soup">Soup</option>
+                        <select name="category" id="edit_category" class="filter-input" style="width: 100%; margin-top:5px;" required>
+                            <option value="signature-sup">Sup ZZ</option>
+                            <option value="signature-mee">Mee Rebus ZZ</option>
+                            <option value="sarapan-panas">Sarapan Panas</option>
+                            <option value="sarapan-roti">Roti Bakar</option>
+                            <option value="roti-canai">Roti Canai</option>
+                            <option value="set-nasi">Set Nasi</option>
+                            <option value="set-panas">Set Masakan</option>
+                            <option value="ikan-siakap">Ikan Siakap</option>
+                            <option value="ikan-bakar">Bakar-Bakar</option>
+                            <option value="alacarte-sayur">Sayur</option>
+                            <option value="alacarte-lauk">Lauk Thai</option>
+                            <option value="alacarte-tepung">Goreng Tepung</option>
+                            <option value="alacarte-sup">Sup Ala Thai</option>
+                            <option value="alacarte-tomyam">Tomyam</option>
+                            <option value="alacarte-meekuah">Mee Kuah</option>
+                            <option value="western">Western</option>
+                            <option value="goreng-nasi">Nasi Goreng</option>
+                            <option value="goreng-mee">Mee Goreng</option>
+                            <option value="drinks-noncoffee">Drinks</option>
+                            <option value="drinks-jus">Jus</option>
+                            <option value="drinks-dessert">Dessert</option>
                         </select>
                     </div>
                     <div class="form-group" style="margin-bottom: 15px;">

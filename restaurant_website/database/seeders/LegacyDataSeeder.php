@@ -14,7 +14,7 @@ class LegacyDataSeeder extends Seeder
      */
     public function run(): void
     {
-        $sqlPath = database_path('legacy/seed_data.sql');
+        $sqlPath = database_path('legacy/seed_data_new.sql');
         if (File::exists($sqlPath)) {
             $sql = File::get($sqlPath);
             // The sql script contains 'USE restaurant_oms;' which might cause issues if DB name differs
